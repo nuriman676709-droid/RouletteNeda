@@ -1,0 +1,506 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#101019">
+<title>Рулетка Неда — Яйца</title>
+<style>
+:root{color-scheme:dark;--bg:#101019;--panel:#252536;--lime:#a3e635;--gold:#facc15;--muted:#a1a1aa}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#25253e,#101019 65%);color:#f4f4f5;font-family:system-ui,-apple-system,Segoe UI,sans-serif}
+main{max-width:620px;margin:auto;padding:16px 14px 32px}.hero{text-align:center;padding:8px 0 16px}.hero h1{font-size:clamp(27px,7vw,38px);margin:0;color:var(--lime);text-shadow:0 0 20px #84cc1640}.hero p{color:#c4b5fd;margin:5px 0}
+.panel{background:#252536;border:1px solid #39394d;border-radius:18px;padding:14px;margin:12px 0}.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}.stat{text-align:center;background:#191925;border-radius:12px;padding:12px 6px}.label{font-size:12px;color:var(--gold);letter-spacing:.06em}.number{font-size:clamp(20px,5vw,27px);font-weight:800;color:var(--gold);overflow-wrap:anywhere}
+.progress{height:10px;background:#414155;border-radius:99px;overflow:hidden;margin-top:9px}.progress span{display:block;height:100%;background:linear-gradient(90deg,#84cc16,#d9f99d);width:0%;transition:width .2s}
+nav{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin:14px 0}.tab{background:#252536;color:#ddd;border:1px solid #454558;border-radius:11px;padding:10px 2px;font-size:12px;font-weight:700}.tab.active{background:#3b4c25;color:#d9f99d;border-color:var(--lime)}
+h2{font-size:20px;margin:4px 0 12px}.wheel{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px}.egg{background:#171722;border:1px solid var(--egg-color,#555);border-radius:12px;text-align:center;padding:9px 3px;min-width:0}.egg .emoji{font-size:29px}.egg small{display:block;font-size:10px;color:var(--egg-color,#ddd);overflow-wrap:anywhere;margin-top:3px}
+button{font:inherit;cursor:pointer}.primary{width:100%;border:0;border-radius:13px;padding:15px 10px;background:linear-gradient(180deg,#a3e635,#65a30d);color:#17210b;font-weight:900;font-size:17px;margin-top:12px;box-shadow:0 4px 0 #3f6212}.primary:disabled,button:disabled{opacity:.45;cursor:not-allowed}.secondary{width:100%;background:#343449;color:#f4f4f5;border:1px solid #52526a;border-radius:11px;padding:11px;margin-top:8px;font-weight:700}
+.win{text-align:center;border:2px solid var(--win-color,#a3e635);background:#171722;border-radius:16px;padding:16px;margin-top:12px;position:relative;overflow:hidden}.win .emoji{font-size:56px}.win h3{margin:4px 0;color:var(--win-color,#a3e635);font-size:22px}.rare-win{animation:rarePulse 1.2s ease-in-out 3;box-shadow:0 0 18px var(--win-color),inset 0 0 28px #ffffff12}.rare-win:before{content:"✨ ✦ 🌟 ✦ ✨";display:block;font-size:23px;letter-spacing:8px;animation:sparkle .7s ease-in-out infinite alternate}.rare-win .emoji{animation:rareBounce .65s ease-in-out infinite alternate;filter:drop-shadow(0 0 14px var(--win-color))}.rare-label{font-weight:1000;letter-spacing:2px;color:#facc15;animation:sparkle .5s ease-in-out infinite alternate}@keyframes rarePulse{0%,100%{transform:scale(1);filter:brightness(1)}50%{transform:scale(1.025);filter:brightness(1.65)}}@keyframes sparkle{from{opacity:.55;transform:scale(.96)}to{opacity:1;transform:scale(1.05)}}@keyframes rareBounce{from{transform:translateY(0) rotate(-5deg)}to{transform:translateY(-9px) rotate(5deg)}}.pet-equip{background:#343449;color:#f4f4f5;border:1px solid #52526a;border-radius:10px;padding:8px 10px;font-weight:800}.pet-equip.equipped{background:#3b4c25;border-color:var(--lime);color:#d9f99d}
+.admin-command-zone{margin:14px 0;padding:14px;border-radius:18px;border:1px solid #6850a8;background:radial-gradient(circle at top right,#43306b 0,#191925 58%);box-shadow:0 0 24px #8b5cf625}.admin-zone-title{display:flex;align-items:center;gap:10px;margin-bottom:12px}.admin-zone-title>span:first-child{font-size:30px}.admin-zone-title h3{margin:0;font-size:18px;color:#f5d0fe}.admin-zone-title p{margin:2px 0 0;color:#c4b5fd;font-size:11px}.admin-live{margin-left:auto;font-size:9px;color:#bef264;border:1px solid #65a30d;padding:4px 6px;border-radius:99px;white-space:nowrap}.admin-quick-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.admin-action{min-height:105px;border-radius:13px;border:1px solid #52526a;padding:10px 7px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;color:white;text-align:center}.admin-action span{font-size:24px}.admin-action b{font-size:11px;letter-spacing:.04em}.admin-action small{font-size:10px;color:#e4e4e7;line-height:1.3}.admin-action.gold{background:linear-gradient(145deg,#854d0e,#422006)}.admin-action.purple{background:linear-gradient(145deg,#6b21a8,#2e1065)}.admin-action.cyan{background:linear-gradient(145deg,#155e75,#164e63)}.admin-action.pink{background:linear-gradient(145deg,#9d174d,#500724)}.admin-pets-zone{border:1px solid #365b68;background:linear-gradient(145deg,#173044,#191925)}#neda>.panel{border-color:#574184;background:linear-gradient(180deg,#28213c,#252536)}#neda>.panel>h2{color:#e9d5ff;text-shadow:0 0 14px #a855f740}.row{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid #3a3a4c}.row:last-child{border-bottom:0}.row .info{flex:1;min-width:0}.row .info b{display:block;overflow-wrap:anywhere}.muted{color:var(--muted);font-size:12px}.price{color:var(--gold);font-size:13px}.upgrade{background:#191925;border-radius:14px;padding:13px;margin:10px 0}.upgrade h3{margin:0 0 6px}.upgrade p{color:#d4d4d8;font-size:13px;margin:5px 0 10px}textarea{width:100%;min-height:100px;background:#171722;color:#fff;border:1px solid #52526a;border-radius:10px;padding:10px;font:12px ui-monospace,monospace;overflow-wrap:anywhere}input{accent-color:var(--lime)}.message{color:var(--lime);font-size:13px;margin-top:10px;overflow-wrap:anywhere}.hidden{display:none!important}.footer{text-align:center;color:#71717a;font-size:11px;margin-top:20px}
+</style>
+</head>
+<body>
+<main>
+<header class="hero"><h1>🥚 РУЛЕТКА НЕДА 💀</h1><p>Крути • Собирай • Прокачивайся</p><p id="currentTitleDisplay" class="muted">🌱 Новичок Неда</p></header>
+<section class="panel">
+  <div class="stats">
+    <div class="stat"><div class="label">ТВОИ МОНЕТЫ</div><div class="number" id="coins">1 000 🪙</div></div>
+    <div class="stat"><div class="label">УРОВЕНЬ</div><div class="number" id="level">1 ⭐</div></div>
+  </div>
+  <div style="display:flex;justify-content:space-between;margin-top:12px"><span class="muted" id="xpText">0 / 100 XP</span><span class="muted" id="spinsText">Круток: 0</span></div>
+  <div class="progress"><span id="xpBar"></span></div>
+</section>
+<nav>
+  <button class="tab active" data-tab="roulette">🎰 Рулетка</button>
+  <button class="tab" data-tab="upgrade">⚡ Прокачка</button>
+  <button class="tab" data-tab="collection">🏆 Яйца</button>
+  <button class="tab" data-tab="pets">🐉 Питомцы</button>
+  <button class="tab" data-tab="achievements">🏅 Достижения</button>
+  <button class="tab" data-tab="quests">📜 Задания</button>
+  <button class="tab" data-tab="pass">🎟️ Пас</button>
+  <button class="tab" data-tab="fusion">🧬 Слияние</button>
+  <button class="tab" data-tab="chests">🎁 Сундуки</button>
+  <button class="tab" data-tab="skills">⚡ Навыки</button>
+  <button class="tab" data-tab="bosses">👹 Боссы</button>
+  <button class="tab" data-tab="encyclopedia">📖 Энциклопедия</button>
+  <button class="tab" data-tab="world">🌌 Мир</button>
+  <button class="tab" data-tab="titles">👑 Титулы</button>
+  <button class="tab" data-tab="save">💾 Сохранить</button>
+  <button class="tab" data-tab="neda">🗿 Панель Неда</button>
+</nav>
+<section id="roulette" class="view">
+  <div class="panel"><h2>🎰 Что выпадет?</h2><div class="wheel" id="wheel"></div>
+    <div id="win"></div>
+    <button class="primary" id="spinBtn">КРУТИТЬ — 100 🪙</button>
+    <button class="secondary" id="giftBtn">🎁 Забрать бонус +250 монет</button>
+    <p class="muted">Игровые монеты ничего не стоят в реальности.</p>
+  </div>
+  <div class="panel"><h2>💼 Секретный бизнес</h2><p class="muted">Открой Бизнес Неда за 100 000 монет. После покупки он сможет выпасть в рулетке!</p><button class="primary" id="businessBtn">💼 Открыть Бизнес Неда — 100 000 🪙</button><div id="businessMessage" class="message"></div><div class="upgrade" style="margin-top:12px"><h3>🏢 Прокачка бизнеса — ур. <span id="businessLvl">0</span></h3><p>Каждый уровень повышает награду за выпадение Бизнеса Неда на 25% и доход в час.</p><div class="price">Цена: <span id="businessPrice">50 000</span> 🪙</div><button class="secondary" id="businessUpgradeBtn">⬆️ Улучшить бизнес</button><div class="muted" id="businessUpgradeMessage"></div><p id="businessIncomeText" class="message">Доход: 0 🪙/час</p><p id="businessPendingText" class="muted">Накоплено: 0 🪙</p><button class="secondary" id="collectBusinessBtn">💰 Забрать доход</button></div></div>
+  <div class="panel"><h2>📜 Последний выигрыш</h2><div id="history" class="muted">Пока пусто — крути рулетку!</div></div>
+</section>
+<section id="upgrade" class="view hidden">
+  <div class="panel"><h2>⚡ Прокачка</h2>
+    <div class="upgrade"><h3>🍀 Удача — ур. <span id="luckLvl">0</span></h3><p>Немного повышает шанс редких призов.</p><div class="price">Цена: <span id="luckPrice">250</span> 🪙</div><button class="secondary" id="luckBtn">⬆️ Улучшить удачу (+5 XP)</button></div>
+    <div class="upgrade"><h3>💰 Награды — ур. <span id="bonusLvl">0</span></h3><p>Увеличивает монеты за каждый выигрыш.</p><div class="price">Цена: <span id="bonusPrice">200</span> 🪙</div><button class="secondary" id="bonusBtn">⬆️ Улучшить награды (+5 XP)</button></div>
+    <div class="upgrade"><h3>🎟️ Скидка — ур. <span id="discountLvl">0</span></h3><p>Каждая прокачка снижает стоимость крутки на 10 монет: старт 250 🪙, минимум 50 🪙.</p><div class="price">Цена: <span id="discountPrice">300</span> 🪙</div><button class="secondary" id="discountBtn">⬆️ Купить скидку (+5 XP)</button></div>
+    <div class="upgrade"><h3>🌌 Сверхперерождение — <span id="superRebirthCount">0</span></h3><p>Открывается после 10 обычных перерождений. Требует 50 уровень и 10 000 000 монет. Даёт ×10 к деньгам и XP за каждое сверхперерождение.</p><div class="price">Множитель сверхперерождений: <strong id="superMult">×1</strong></div><p class="muted" id="superRequirements">Нужно 10 обычных перерождений, 50 уровень и 10 000 000 🪙</p><button class="primary" id="superRebirthBtn">🌌 Сверхпереродиться</button><div id="superMessage" class="message"></div></div>
+    <div class="upgrade"><h3>♻️ Перерождение — <span id="rebirthCount">0</span></h3><p>Для первого перерождения нужен 5 уровень, а каждое следующее требует ещё на 5 уровней больше, плюс 1 000 000 монет. Перерождение сбрасывает уровень, монеты, улучшения и бизнес, но сохраняет коллекцию. Каждое перерождение увеличивает деньги и XP в 1,5 раза!</p><div class="price">Текущий множитель денег: <strong id="moneyMult">×1</strong></div><p class="muted" id="rebirthRequirements">Требование: 5 уровень и 1 000 000 🪙</p><button class="primary" id="rebirthBtn">♻️ Переродиться</button><div id="rebirthMessage" class="message"></div></div>
+  </div>
+</section>
+<section id="collection" class="view hidden"><div class="panel"><h2>🏆 Коллекция яиц</h2><p class="muted" id="collectionCount"></p><p class="muted">В коллекции есть 1000 новых сверхредких яиц. У каждого очень маленький шанс выпадения — охота будет долгой! 💀</p><div id="collectionList"></div></div></section>
+<section id="pets" class="view hidden"><div class="panel"><h2>🐉 Питомцы Неда</h2><p class="muted">Иногда после крутки находится питомец. Собирай питомцев и нажимай «Надеть», чтобы выбрать, чей бонус к монетам и XP использовать. Одновременно активен один питомец.</p><div id="petBonuses" class="upgrade"></div><div id="petList"></div></div></section>
+<section id="achievements" class="view hidden"><div class="panel"><h2>🏅 Достижения</h2><p class="muted">Выполняй игровые цели, забирай монеты и XP. Награду за каждое достижение можно получить один раз.</p><div id="achievementList"></div></div></section>
+<section id="quests" class="view hidden"><div class="panel"><h2>📜 Задания</h2><p class="muted">Выполняй задания и забирай монеты. Прогресс сохраняется.</p><div id="questList"></div></div></section>
+<section id="pass" class="view hidden"><div class="panel"><h2>🎟️ Пас Неда</h2><p class="muted">Получай XP за крутки, повышай уровень паса и забирай награды бесплатно.</p><div class="progress"><span id="passBar"></span></div><p id="passProgress" class="muted"></p><div id="passList"></div></div></section>
+<section id="fusion" class="view hidden"><div class="panel"><h2>🧬 Слияние яиц</h2><p class="muted">Слей 5 одинаковых предметов в одну усиленную версию. Усиленные предметы дают бонусную награду и сохраняются в коллекции.</p><label for="fusionItem" class="muted">Выбери предмет (нужно 5 копий)</label><select id="fusionItem" style="width:100%;padding:12px;background:#171722;color:#fff;border:1px solid #52526a;border-radius:10px"></select><div id="fusionInfo" class="upgrade"></div><button class="primary" id="fusionBtn">🧬 Слить 5 предметов</button><div id="fusionMessage" class="message"></div><h3>✨ Усиленные предметы</h3><div id="fusedList"></div></div></section>
+<section id="chests" class="view hidden"><div class="panel"><h2>🎁 Тайные сундуки</h2><p class="muted">Купи сундук за 10 000 монет, а затем открой его. Боссы также могут давать сундуки.</p><div class="stats"><div class="stat"><div class="label">СУНДУКИ</div><div class="number" id="chestCount">0 🎁</div></div><div class="stat"><div class="label">ЦЕНА</div><div class="number">10 000 🪙</div></div></div><button class="secondary" id="buyChestBtn">🪙 Купить сундук</button><button class="primary" id="openChestBtn">🎁 Открыть сундук</button><div id="chestMessage" class="message"></div></div></section>
+<section id="skills" class="view hidden"><div class="panel"><h2>⚡ Дерево навыков</h2><p class="muted">Получай 1 очко навыка за каждый новый уровень. Очки и навыки сохраняются при перерождении.</p><div class="upgrade"><h3>✨ Очки навыков: <span id="skillPoints">0</span></h3></div><div id="skillList"></div></div></section>
+<section id="bosses" class="view hidden"><div class="panel"><h2>👹 Боссы Неда</h2><p class="muted">На каждом уровне, кратном 10, можно бросить вызов боссу. Победа даёт монеты, XP и сундук. После перерождения боссы доступны снова.</p><div id="bossInfo" class="upgrade"></div><button class="primary" id="bossBtn">⚔️ Сразиться с боссом</button><div id="bossMessage" class="message"></div><h3>🏆 Побеждённые боссы</h3><div id="bossHistory" class="muted"></div></div></section>
+<section id="encyclopedia" class="view hidden"><div class="panel"><h2>📖 Энциклопедия предметов</h2><p class="muted" id="encyclopediaCount"></p><input id="encyclopediaSearch" type="search" placeholder="🔎 Поиск предмета..." style="width:100%;padding:12px;background:#171722;color:#fff;border:1px solid #52526a;border-radius:10px"><select id="encyclopediaRarity" style="width:100%;margin-top:8px;padding:12px;background:#171722;color:#fff;border:1px solid #52526a;border-radius:10px"><option value="">Все редкости</option></select><div id="encyclopediaList"></div><div id="encyclopediaMore" class="muted"></div></div></section>
+<section id="world" class="view hidden"><div class="panel"><h2>🌌 Межпространственный мир</h2><p class="muted">Открывается после 25 обычных перерождений. Здесь своя рулетка и коллекция космических предметов.</p><div id="worldLock" class="upgrade"></div><div class="wheel" id="worldWheel"></div><button class="primary" id="worldSpinBtn">🌌 Крутить межпространственную рулетку — 10 000 🪙</button><div id="worldWin"></div><h3>🪐 Коллекция другого мира</h3><div id="worldCollectionList"></div></div></section>
+<section id="titles" class="view hidden"><div class="panel"><h2>👑 Титулы Неда</h2><p class="muted">Открывай титулы за достижения и выбирай, какой показывать в игре.</p><div class="upgrade"><h3>Текущий титул</h3><select id="activeTitle" style="width:100%;padding:12px;background:#171722;color:#fff;border:1px solid #52526a;border-radius:10px"></select><button class="secondary" id="saveTitleBtn">👑 Надеть титул</button><div id="titleMessage" class="message"></div></div><div id="titleList"></div></div></section>
+<section id="neda" class="view hidden">
+  <div class="panel"><h2>🗿 Панель Неда</h2><p class="muted">Выдавай себе игровые ресурсы, уровни, перерождения и предметы. Изменения сохраняются автоматически.</p>
+    <div class="upgrade"><h3>🪙 Выдать монеты</h3><input id="adminCoins" type="number" min="0" step="1" value="1000000" style="width:100%;padding:12px;background:#171722;color:#fff;border:1px solid #52526a;border-radius:10px"><button class="secondary" id="giveCoinsBtn">➕ Выдать монеты</button></div>
+    <div class="upgrade"><h3>⭐ Выдать XP</h3><input id="adminXp" type="number" min="0" step="1" value="10000" style="width:100%;padding:12px;background:#171722;color:#fff;border:1px solid #52526a;border-radius:10px"><button class="secondary" id="giveXpBtn">➕ Выдать XP</button></div>
+    <div class="upgrade"><h3>🎰 Выдать крутки</h3><input id="adminSpins" type="number" min="0" step="1" value="100" style="width:100%;padding:12px;background:#171722;color:#fff;border:1px solid #52526a;border-radius:10px"><button class="secondary" id="giveSpinsBtn">➕ Выдать крутки</button></div>
+    <div class="upgrade"><h3>📈 Установить уровень</h3><input id="adminLevel" type="number" min="1" step="1" value="10" style="width:100%;padding:12px;background:#171722;color:#fff;border:1px solid #52526a;border-radius:10px"><button class="secondary" id="giveLevelBtn">⚡ Установить уровень</button></div>
+    <div class="upgrade"><h3>♻️ Выдать перерождения</h3><input id="adminRebirths" type="number" min="0" step="1" value="1" style="width:100%;padding:12px;background:#171722;color:#fff;border:1px solid #52526a;border-radius:10px"><button class="secondary" id="giveRebirthsBtn">♻️ Установить перерождения</button></div>
+    <div class="upgrade"><h3>🏢 Разблокировать бизнес</h3><button class="secondary" id="adminBusinessBtn">💼 Открыть бизнес и выдать 10 уровней</button></div>
+    <div class="upgrade"><h3>🥚 Выдать предмет</h3><select id="adminItem" style="width:100%;padding:12px;background:#171722;color:#fff;border:1px solid #52526a;border-radius:10px"></select><input id="adminItemCount" type="number" min="1" step="1" value="1" style="width:100%;margin-top:8px;padding:12px;background:#171722;color:#fff;border:1px solid #52526a;border-radius:10px"><button class="secondary" id="giveItemBtn">🎁 Выдать выбранный предмет</button><button class="secondary" id="giveAllItemsBtn">🌌 Выдать по одному каждого предмета</button></div>
+    <div class="admin-command-zone">
+      <div class="admin-zone-title"><span>⚡</span><div><h3>Командный центр Неда</h3><p>Быстрые действия • режим создателя</p></div><span class="admin-live">● ONLINE</span></div>
+      <div class="admin-quick-grid">
+        <button class="admin-action gold" id="godModeBtn"><span>👑</span><b>РЕЖИМ БОГА</b><small>+1 млрд монет · XP · крутки</small></button>
+        <button class="admin-action purple" id="maxSkillsBtn"><span>⚡</span><b>МАКС. НАВЫКИ</b><small>Прокачать все навыки</small></button>
+        <button class="admin-action cyan" id="unlockWorldBtn"><span>🌌</span><b>ОТКРЫТЬ МИР</b><small>25 перерождений</small></button>
+        <button class="admin-action pink" id="secretBurstBtn"><span>💥</span><b>СЕКРЕТНЫЙ ДОЖДЬ</b><small>10 случайных секретных яиц</small></button>
+      </div>
+    </div>
+    <div class="upgrade admin-pets-zone"><h3>🐾 Управление питомцами</h3><p>Выдай питомца прямо из панели создателя.</p><select id="adminPet" style="width:100%;padding:12px;background:#171722;color:#fff;border:1px solid #52526a;border-radius:10px"></select><input id="adminPetCount" type="number" min="1" step="1" value="1" style="width:100%;margin-top:8px;padding:12px;background:#171722;color:#fff;border:1px solid #52526a;border-radius:10px"><button class="secondary" id="givePetBtn">🐾 Выдать выбранного питомца</button><button class="secondary" id="giveAllPetsBtn">🐉 Собрать всех питомцев</button></div>
+    <div class="upgrade"><h3>🎭 Секретные команды Неда</h3><button class="secondary" id="goldenRainBtn">🌧️ Золотой дождь (+1 000 000 монет)</button><button class="secondary" id="doubleXpBtn">⚡ Двойной XP на 10 минут</button><button class="secondary" id="freeSecretBtn">🌌 Выдать все секретные предметы</button><button class="secondary" id="jackpotBtn">🎰 Активировать джекпот</button><div id="eventMessage" class="message"></div></div>
+    <div id="adminMessage" class="message" aria-live="polite"></div>
+  </div>
+</section>
+<section id="save" class="view hidden">
+  <div class="panel"><h2>💾 Автосохранение</h2><p class="muted">Игра автоматически сохраняет прогресс на этом устройстве в браузере. Не очищай данные браузера, если хочешь сохранить игру. Также можно сделать резервный код.</p>
+    <button class="primary" id="exportBtn">📋 Создать код сохранения</button><textarea id="saveCode" placeholder="Здесь появится код сохранения" readonly></textarea>
+    <h2 style="margin-top:18px">📥 Загрузить сохранение</h2><textarea id="loadCode" placeholder="Вставь ранее сохранённый код сюда"></textarea><button class="secondary" id="importBtn">Загрузить прогресс</button><div id="saveMessage" class="message"></div>
+    <button class="secondary" id="resetBtn">🔄 Начать заново</button>
+  </div>
+</section>
+<div class="footer">НЕДА • Офлайн мини-игра • Прогресс сохраняется на этом устройстве</div>
+</main>
+<script>
+const BASE_PRIZES=[
+{name:"Обычное яйцо",emoji:"🥚",rarity:"Обычное",chance:24,reward:30,color:"#d1d5db"},
+{name:"Тухлое яйцо",emoji:"🤢",rarity:"Необычное",chance:18,reward:60,color:"#84cc16"},
+{name:"Золотое яйцо",emoji:"🌟",rarity:"Редкое",chance:13,reward:120,color:"#facc15"},
+{name:"Алмазное яйцо",emoji:"💎",rarity:"Эпическое",chance:9,reward:250,color:"#22d3ee"},
+{name:"Огненное яйцо",emoji:"🔥",rarity:"Эпическое",chance:7,reward:350,color:"#fb923c"},
+{name:"Ледяное яйцо",emoji:"🧊",rarity:"Эпическое",chance:6,reward:400,color:"#7dd3fc"},
+{name:"Радужное яйцо",emoji:"🌈",rarity:"Легендарное",chance:5,reward:700,color:"#e879f9"},
+{name:"Яйцо-зомби",emoji:"🧟",rarity:"Легендарное",chance:4,reward:850,color:"#a3e635"},
+{name:"Яйцо-призрак",emoji:"👻",rarity:"Легендарное",chance:3,reward:1000,color:"#c4b5fd"},
+{name:"Яйцо-дракон",emoji:"🐉",rarity:"Мифическое",chance:2.5,reward:1500,color:"#f87171"},
+{name:"Босс Неда",emoji:"👑",rarity:"Мифическое",chance:2,reward:2000,color:"#fb923c"},
+{name:"Космическое яйцо",emoji:"🪐",rarity:"Мифическое",chance:1.5,reward:2500,color:"#818cf8"},
+{name:"Яйцо-мутант",emoji:"☣️",rarity:"Сверхредкое",chance:1.2,reward:3000,color:"#bef264"},
+{name:"Яйцо-молния",emoji:"⚡",rarity:"Сверхредкое",chance:1,reward:3500,color:"#fde047"},
+{name:"Тёмное яйцо",emoji:"🌑",rarity:"Сверхредкое",chance:.8,reward:4000,color:"#a78bfa"},
+{name:"Яйцо НЕДА",emoji:"🗿",rarity:"Секретное",chance:.5,reward:6000,color:"#f472b6"},
+{name:"Король Неда",emoji:"🤴",rarity:"Божественное",chance:.2,reward:12000,color:"#fbbf24"},
+{name:"Яйцо галактики",emoji:"🌌",rarity:"Божественное",chance:.15,reward:15000,color:"#c084fc"},
+{name:"Тухлый супербосс",emoji:"☠️",rarity:"Запредельное",chance:.1,reward:25000,color:"#4ade80"},
+{name:"Яйцо бесконечности",emoji:"♾️",rarity:"Ультра-секретное",chance:.05,reward:50000,color:"#67e8f9"}
+];
+
+const EXTRA_PRIZES = [
+{name:"Яйцо-пончик",emoji:"🍩",rarity:"Необычное",chance:2.2,reward:280,color:"#d1d5db"},
+{name:"Яйцо-пицца",emoji:"🍕",rarity:"Редкое",chance:2.182,reward:460,color:"#84cc16"},
+{name:"Яйцо-бургер",emoji:"🍔",rarity:"Эпическое",chance:2.164,reward:640,color:"#facc15"},
+{name:"Яйцо-арбуз",emoji:"🍉",rarity:"Легендарное",chance:2.146,reward:820,color:"#22d3ee"},
+{name:"Яйцо-банан",emoji:"🍌",rarity:"Мифическое",chance:2.128,reward:1000,color:"#fb923c"},
+{name:"Яйцо-клубника",emoji:"🍓",rarity:"Необычное",chance:2.11,reward:1180,color:"#7dd3fc"},
+{name:"Яйцо-лимон",emoji:"🍋",rarity:"Редкое",chance:2.092,reward:1360,color:"#e879f9"},
+{name:"Яйцо-виноград",emoji:"🍇",rarity:"Эпическое",chance:2.074,reward:1540,color:"#a3e635"},
+{name:"Яйцо-ананас",emoji:"🍍",rarity:"Легендарное",chance:2.056,reward:1720,color:"#c4b5fd"},
+{name:"Яйцо-кокос",emoji:"🥥",rarity:"Мифическое",chance:2.038,reward:1900,color:"#f87171"},
+{name:"Яйцо-робот",emoji:"🤖",rarity:"Необычное",chance:2.02,reward:2080,color:"#818cf8"},
+{name:"Яйцо-ниндзя",emoji:"🥷",rarity:"Редкое",chance:2.002,reward:2260,color:"#f472b6"},
+{name:"Яйцо-пират",emoji:"🏴\u200d☠️",rarity:"Эпическое",chance:1.984,reward:2440,color:"#d1d5db"},
+{name:"Яйцо-рыцарь",emoji:"🛡️",rarity:"Легендарное",chance:1.966,reward:2620,color:"#84cc16"},
+{name:"Яйцо-космонавт",emoji:"🚀",rarity:"Мифическое",chance:1.948,reward:2800,color:"#facc15"},
+{name:"Яйцо-детектив",emoji:"🕵️",rarity:"Необычное",chance:1.93,reward:2980,color:"#22d3ee"},
+{name:"Яйцо-волшебник",emoji:"🧙",rarity:"Редкое",chance:1.912,reward:3160,color:"#fb923c"},
+{name:"Яйцо-супергерой",emoji:"🦸",rarity:"Эпическое",chance:1.894,reward:3340,color:"#7dd3fc"},
+{name:"Яйцо-клоун",emoji:"🤡",rarity:"Легендарное",chance:1.876,reward:3520,color:"#e879f9"},
+{name:"Яйцо-учёный",emoji:"🧪",rarity:"Мифическое",chance:1.858,reward:3700,color:"#a3e635"},
+{name:"Яйцо-динозавр",emoji:"🦖",rarity:"Необычное",chance:1.84,reward:3880,color:"#c4b5fd"},
+{name:"Яйцо-тигр",emoji:"🐯",rarity:"Редкое",chance:1.822,reward:4060,color:"#f87171"},
+{name:"Яйцо-лев",emoji:"🦁",rarity:"Эпическое",chance:1.804,reward:4240,color:"#818cf8"},
+{name:"Яйцо-панда",emoji:"🐼",rarity:"Легендарное",chance:1.786,reward:4420,color:"#f472b6"},
+{name:"Яйцо-лиса",emoji:"🦊",rarity:"Мифическое",chance:1.768,reward:4600,color:"#d1d5db"},
+{name:"Яйцо-волк",emoji:"🐺",rarity:"Необычное",chance:1.75,reward:4780,color:"#84cc16"},
+{name:"Яйцо-кролик",emoji:"🐰",rarity:"Редкое",chance:1.732,reward:4960,color:"#facc15"},
+{name:"Яйцо-лягушка",emoji:"🐸",rarity:"Эпическое",chance:1.714,reward:5140,color:"#22d3ee"},
+{name:"Яйцо-акула",emoji:"🦈",rarity:"Легендарное",chance:1.696,reward:5320,color:"#fb923c"},
+{name:"Яйцо-осьминог",emoji:"🐙",rarity:"Мифическое",chance:1.678,reward:5500,color:"#7dd3fc"},
+{name:"Яйцо-кактус",emoji:"🌵",rarity:"Необычное",chance:1.66,reward:5680,color:"#e879f9"},
+{name:"Яйцо-гриб",emoji:"🍄",rarity:"Редкое",chance:1.642,reward:5860,color:"#a3e635"},
+{name:"Яйцо-цветок",emoji:"🌸",rarity:"Эпическое",chance:1.624,reward:6040,color:"#c4b5fd"},
+{name:"Яйцо-листик",emoji:"🍃",rarity:"Легендарное",chance:1.606,reward:6220,color:"#f87171"},
+{name:"Яйцо-ракушка",emoji:"🐚",rarity:"Мифическое",chance:1.588,reward:6400,color:"#818cf8"},
+{name:"Яйцо-коралл",emoji:"🪸",rarity:"Необычное",chance:1.57,reward:6580,color:"#f472b6"},
+{name:"Яйцо-снежинка",emoji:"❄️",rarity:"Редкое",chance:1.552,reward:6760,color:"#d1d5db"},
+{name:"Яйцо-ураган",emoji:"🌪️",rarity:"Эпическое",chance:1.534,reward:6940,color:"#84cc16"},
+{name:"Яйцо-торнадо",emoji:"🌋",rarity:"Легендарное",chance:1.516,reward:7120,color:"#facc15"},
+{name:"Яйцо-вулкан",emoji:"💠",rarity:"Мифическое",chance:1.498,reward:7300,color:"#22d3ee"},
+{name:"Яйцо-неон",emoji:"🟪",rarity:"Необычное",chance:1.48,reward:7480,color:"#fb923c"},
+{name:"Яйцо-пиксель",emoji:"👾",rarity:"Редкое",chance:1.462,reward:7660,color:"#7dd3fc"},
+{name:"Яйцо-глитч",emoji:"💻",rarity:"Эпическое",chance:1.444,reward:7840,color:"#e879f9"},
+{name:"Яйцо-кибер",emoji:"🔢",rarity:"Легендарное",chance:1.426,reward:8020,color:"#a3e635"},
+{name:"Яйцо-матрица",emoji:"👁️",rarity:"Мифическое",chance:1.408,reward:8200,color:"#c4b5fd"},
+{name:"Яйцо-голограмма",emoji:"🔦",rarity:"Необычное",chance:1.39,reward:8380,color:"#f87171"},
+{name:"Яйцо-лазер",emoji:"🛸",rarity:"Редкое",chance:1.372,reward:8560,color:"#818cf8"},
+{name:"Яйцо-антиматерия",emoji:"⚛️",rarity:"Эпическое",chance:1.354,reward:8740,color:"#f472b6"},
+{name:"Яйцо-чёрная дыра",emoji:"🕳️",rarity:"Легендарное",chance:1.336,reward:8920,color:"#d1d5db"},
+{name:"Яйцо-квант",emoji:"🧬",rarity:"Мифическое",chance:1.318,reward:9100,color:"#84cc16"},
+{name:"Яйцо-монетка",emoji:"🪙",rarity:"Необычное",chance:1.3,reward:9280,color:"#facc15"},
+{name:"Яйцо-кошелёк",emoji:"👛",rarity:"Редкое",chance:1.282,reward:9460,color:"#22d3ee"},
+{name:"Яйцо-банк",emoji:"🏦",rarity:"Эпическое",chance:1.264,reward:9640,color:"#fb923c"},
+{name:"Яйцо-джекпот",emoji:"🎰",rarity:"Легендарное",chance:1.246,reward:9820,color:"#7dd3fc"},
+{name:"Яйцо-бриллиант",emoji:"💎",rarity:"Мифическое",chance:1.228,reward:10000,color:"#e879f9"},
+{name:"Яйцо-корона",emoji:"👑",rarity:"Необычное",chance:1.21,reward:10180,color:"#a3e635"},
+{name:"Яйцо-трон",emoji:"🪑",rarity:"Редкое",chance:1.192,reward:10360,color:"#c4b5fd"},
+{name:"Яйцо-скипетр",emoji:"🪄",rarity:"Эпическое",chance:1.174,reward:10540,color:"#f87171"},
+{name:"Яйцо-медаль",emoji:"🏅",rarity:"Легендарное",chance:1.156,reward:10720,color:"#818cf8"},
+{name:"Яйцо-кубок",emoji:"🏆",rarity:"Мифическое",chance:1.138,reward:10900,color:"#f472b6"},
+{name:"Яйцо-молоко",emoji:"🥛",rarity:"Необычное",chance:1.12,reward:11080,color:"#d1d5db"},
+{name:"Яйцо-мороженое",emoji:"🍦",rarity:"Редкое",chance:1.102,reward:11260,color:"#84cc16"},
+{name:"Яйцо-конфета",emoji:"🍬",rarity:"Эпическое",chance:1.084,reward:11440,color:"#facc15"},
+{name:"Яйцо-шоколад",emoji:"🍫",rarity:"Легендарное",chance:1.066,reward:11620,color:"#22d3ee"},
+{name:"Яйцо-мармелад",emoji:"🍡",rarity:"Мифическое",chance:1.048,reward:11800,color:"#fb923c"},
+{name:"Яйцо-печенье",emoji:"🍪",rarity:"Необычное",chance:1.03,reward:11980,color:"#7dd3fc"},
+{name:"Яйцо-торт",emoji:"🎂",rarity:"Редкое",chance:1.012,reward:12160,color:"#e879f9"},
+{name:"Яйцо-пирог",emoji:"🥧",rarity:"Эпическое",chance:0.994,reward:12340,color:"#a3e635"},
+{name:"Яйцо-попкорн",emoji:"🍿",rarity:"Легендарное",chance:0.976,reward:12520,color:"#c4b5fd"},
+{name:"Яйцо-лапша",emoji:"🍜",rarity:"Мифическое",chance:0.958,reward:12700,color:"#f87171"},
+{name:"Яйцо-мем",emoji:"😂",rarity:"Необычное",chance:0.94,reward:12880,color:"#818cf8"},
+{name:"Яйцо-тролль",emoji:"🧌",rarity:"Редкое",chance:0.922,reward:13060,color:"#f472b6"},
+{name:"Яйцо-лол",emoji:"🤣",rarity:"Эпическое",chance:0.904,reward:13240,color:"#d1d5db"},
+{name:"Яйцо-рофл",emoji:"😎",rarity:"Легендарное",chance:0.886,reward:13420,color:"#84cc16"},
+{name:"Яйцо-гигачад",emoji:"🗿",rarity:"Мифическое",chance:0.868,reward:13600,color:"#facc15"},
+{name:"Яйцо-скибиди",emoji:"🚽",rarity:"Необычное",chance:0.85,reward:13780,color:"#22d3ee"},
+{name:"Яйцо-сигма",emoji:"📈",rarity:"Редкое",chance:0.832,reward:13960,color:"#fb923c"},
+{name:"Яйцо-ням",emoji:"🤤",rarity:"Эпическое",chance:0.814,reward:14140,color:"#7dd3fc"},
+{name:"Яйцо-бум",emoji:"💥",rarity:"Легендарное",chance:0.796,reward:14320,color:"#e879f9"},
+{name:"Яйцо-хаос",emoji:"🌀",rarity:"Мифическое",chance:0.778,reward:14500,color:"#a3e635"},
+{name:"Яйцо-океан",emoji:"🌊",rarity:"Необычное",chance:0.76,reward:14680,color:"#c4b5fd"},
+{name:"Яйцо-лавина",emoji:"🏔️",rarity:"Редкое",chance:0.742,reward:14860,color:"#f87171"},
+{name:"Яйцо-пустыня",emoji:"🏜️",rarity:"Эпическое",chance:0.724,reward:15040,color:"#818cf8"},
+{name:"Яйцо-джунгли",emoji:"🌴",rarity:"Легендарное",chance:0.706,reward:15220,color:"#f472b6"},
+{name:"Яйцо-остров",emoji:"💧",rarity:"Мифическое",chance:0.688,reward:15400,color:"#d1d5db"},
+{name:"Яйцо-водопад",emoji:"🌈",rarity:"Необычное",chance:0.67,reward:15580,color:"#84cc16"},
+{name:"Яйцо-радуга 2.0",emoji:"☀️",rarity:"Редкое",chance:0.652,reward:15760,color:"#facc15"},
+{name:"Яйцо-солнце",emoji:"🌙",rarity:"Эпическое",chance:0.634,reward:15940,color:"#22d3ee"},
+{name:"Яйцо-луна",emoji:"☄️",rarity:"Легендарное",chance:0.616,reward:16120,color:"#fb923c"},
+{name:"Яйцо-комета",emoji:"🗝️",rarity:"Мифическое",chance:0.598,reward:16300,color:"#7dd3fc"},
+{name:"Яйцо-артефакт",emoji:"🛕",rarity:"Необычное",chance:0.58,reward:16480,color:"#e879f9"},
+{name:"Яйцо-древний бог",emoji:"🌀",rarity:"Редкое",chance:0.562,reward:16660,color:"#a3e635"},
+{name:"Яйцо-измерение",emoji:"🔥",rarity:"Эпическое",chance:0.544,reward:16840,color:"#c4b5fd"},
+{name:"Яйцо-феникс",emoji:"🗻",rarity:"Легендарное",chance:0.526,reward:17020,color:"#f87171"},
+{name:"Яйцо-титан",emoji:"📜",rarity:"Мифическое",chance:0.508,reward:17200,color:"#818cf8"},
+{name:"Яйцо-легенда",emoji:"💫",rarity:"Необычное",chance:0.49,reward:17380,color:"#f472b6"},
+{name:"Яйцо-сверхновая",emoji:"♾️",rarity:"Редкое",chance:0.472,reward:17560,color:"#d1d5db"},
+{name:"Яйцо-вечность",emoji:"👹",rarity:"Эпическое",chance:0.454,reward:17740,color:"#84cc16"},
+{name:"Яйцо-ультра-неда",emoji:"👾",rarity:"Легендарное",chance:0.436,reward:17920,color:"#facc15"},
+{name:"Яйцо-мегабосс",emoji:"🍩",rarity:"Мифическое",chance:0.418,reward:18100,color:"#22d3ee"}
+];
+// 1000 дополнительных сверхредких яиц. Их общий шанс очень мал, а каждое яйцо уникально.
+const ULTRA_EMOJIS=["🪬","🧿","🔮","🪷","🦄","🐲","🪽","🌠","🌌","🪐","⚜️","💠","🔱","🌀","🪄","🧬","🛸","🪙","🗝️","🏵️","🌋","🌈","☄️","🌑","🪸","🦕","🦋","🦚","🦜","🐉"];
+const ULTRA_THEMES=["Забытой Галактики","Квантовой Бездны","Тёмной Материи","Древнего Неда","Потерянного Измерения","Звёздного Хаоса","Золотого Времени","Ледяного Космоса","Пылающего Титана","Тайного Портала","Бесконечной Пустоты","Запретной Планеты","Королевской Династии","Сверхновой","Невидимой Империи","Кибер-Вселенной","Параллельного Мира","Секретного Босса","Затерянного Храма","Последней Эры"];
+const ULTRA_PRIZES=Array.from({length:1000},(_,i)=>({
+  name:`Яйцо ${ULTRA_THEMES[i%ULTRA_THEMES.length]} #${String(i+1).padStart(4,'0')}`,
+  emoji:ULTRA_EMOJIS[i%ULTRA_EMOJIS.length],
+  rarity:i<700?"Запредельное":i<950?"Ультра-секретное":"Абсолютно невозможное",
+  chance:0.0005*Math.pow(0.998,i),
+  reward:20000+(i+1)*15000,
+  color:["#c084fc","#67e8f9","#facc15","#f472b6","#a3e635"][i%5]
+}));
+const SECRET_PRIZES=[
+{name:"Яйцо Нулевого Неда",emoji:"🕳️",rarity:"Секретное измерение",chance:0.00008,reward:250000,color:"#e879f9"},
+{name:"Яйцо Глитч-Короля",emoji:"👾",rarity:"Секретное измерение",chance:0.00004,reward:500000,color:"#67e8f9"},
+{name:"Яйцо Чёрного Солнца",emoji:"🌑",rarity:"Запредельная тайна",chance:0.00002,reward:1000000,color:"#f87171"},
+{name:"Яйцо Последнего Кода",emoji:"💾",rarity:"Запредельная тайна",chance:0.00001,reward:2500000,color:"#a3e635"},
+{name:"Яйцо Неда 999",emoji:"🗿",rarity:"Абсолютная тайна",chance:0.000003,reward:10000000,color:"#facc15"},
+{name:"Яйцо Вечного Джекпота",emoji:"🎰",rarity:"Абсолютная тайна",chance:0.000001,reward:25000000,color:"#c084fc"},
+{name:"Яйцо Разрыва Реальности",emoji:"🌌",rarity:"Космическая тайна",chance:0.0000005,reward:100000000,color:"#22d3ee"},
+{name:"Яйцо Абсолютного Неда",emoji:"👑",rarity:"Космическая тайна",chance:0.0000001,reward:1000000000,color:"#fb923c"}
+];
+const SECRET_EGG_THEMES=[
+  ["Яйцо Бога Глитча","🧿",1500000000],["Яйцо Запертой Вселенной","🔒",2000000000],["Яйцо Последнего Дракона","🐉",2500000000],
+  ["Яйцо Чёрной Короны","👑",3000000000],["Яйцо Нулевой Реальности","🕳️",3500000000],["Яйцо Вечного Хаоса","🌀",4000000000],
+  ["Яйцо Запретного Портала","🛸",4500000000],["Яйцо Тёмного Создателя","🌑",5000000000],["Яйцо Сверхнового Неда","💥",6000000000],
+  ["Яйцо Скрытого Измерения","🪬",7000000000],["Яйцо Короля Мультивселенной","🌌",8000000000],["Яйцо Невидимого Босса","👁️",9000000000],
+  ["Яйцо Золотого Разлома","✨",10000000000],["Яйцо Кода Создателя","💻",12000000000],["Яйцо Абсолютной Пустоты","⚫",14000000000],
+  ["Яйцо Вечного Секрета","🔮",16000000000],["Яйцо Неда Омега","🗿",18000000000],["Яйцо Сингулярности","♾️",20000000000],
+  ["Яйцо Запредельного Титана","☄️",25000000000],["Яйцо Финального Финала","🏆",30000000000],["Яйцо Тёмной Матрицы","🧬",35000000000],
+  ["Яйцо Секретного Секрета","🎭",40000000000],["Яйцо Абсолютного Глитча","👾",50000000000],["Яйцо Неда ∞","♾️",100000000000]
+];
+SECRET_EGG_THEMES.forEach((e,i)=>SECRET_PRIZES.push({name:e[0],emoji:e[1],rarity:i<8?"Секретное измерение":i<16?"Запредельная тайна":i<22?"Абсолютная тайна":"Космическая тайна",chance:0.00000008*Math.pow(0.82,i),reward:e[2],color:["#e879f9","#67e8f9","#facc15","#f472b6","#a3e635"][i%5]}));
+const BUSINESS_PRIZE={name:"Бизнес Неда",emoji:"💼",rarity:"Бизнес-секретное",chance:0.08,reward:100000,color:"#facc15",businessOnly:true};
+const PRIZES=[...BASE_PRIZES,...EXTRA_PRIZES,...ULTRA_PRIZES,...SECRET_PRIZES,BUSINESS_PRIZE];
+const WORLD_PRIZES=[
+{name:'Яйцо Звёздного Странника',emoji:'🌠',rarity:'Межпространственное',chance:28,reward:100000,color:'#67e8f9'},
+{name:'Яйцо Кристального Портала',emoji:'🔮',rarity:'Межпространственное',chance:20,reward:150000,color:'#c084fc'},
+{name:'Яйцо Тёмной Галактики',emoji:'🌌',rarity:'Космическое',chance:14,reward:250000,color:'#818cf8'},
+{name:'Яйцо Солнечного Титана',emoji:'☀️',rarity:'Космическое',chance:10,reward:350000,color:'#facc15'},
+{name:'Яйцо Хранителя Времени',emoji:'⌛',rarity:'Легендарное измерение',chance:7,reward:500000,color:'#fb923c'},
+{name:'Яйцо Бесконечного Неда',emoji:'♾️',rarity:'Легендарное измерение',chance:5,reward:750000,color:'#a3e635'},
+{name:'Яйцо Разлома Мультивселенной',emoji:'🌀',rarity:'Абсолютное измерение',chance:3,reward:1500000,color:'#f472b6'},
+{name:'Яйцо Создателя Миров',emoji:'👑',rarity:'Абсолютное измерение',chance:1.5,reward:2500000,color:'#facc15'},
+{name:'Яйцо Кометы',emoji:'☄️',rarity:'Межпространственное',chance:2.5,reward:200000,color:'#f97316'},
+{name:'Яйцо Туманности',emoji:'🌫️',rarity:'Космическое',chance:2,reward:300000,color:'#a78bfa'},
+{name:'Яйцо Лунного Кита',emoji:'🐋',rarity:'Космическое',chance:1.5,reward:400000,color:'#38bdf8'},
+{name:'Яйцо Звёздного Лиса',emoji:'🦊',rarity:'Космическое',chance:1.4,reward:450000,color:'#fb923c'},
+{name:'Яйцо Пульсара',emoji:'💫',rarity:'Космическое',chance:1.2,reward:600000,color:'#e879f9'},
+{name:'Яйцо Квантового Кота',emoji:'🐈',rarity:'Легендарное измерение',chance:1,reward:800000,color:'#22d3ee'},
+{name:'Яйцо Галактического Дракона',emoji:'🐲',rarity:'Легендарное измерение',chance:0.9,reward:1000000,color:'#f87171'},
+{name:'Яйцо Золотой Сверхновой',emoji:'🌟',rarity:'Легендарное измерение',chance:0.8,reward:1200000,color:'#fbbf24'},
+{name:'Яйцо Междумирного Феникса',emoji:'🦅',rarity:'Легендарное измерение',chance:0.7,reward:1400000,color:'#fb7185'},
+{name:'Яйцо Чёрной Дыры',emoji:'⚫',rarity:'Абсолютное измерение',chance:0.6,reward:1800000,color:'#64748b'},
+{name:'Яйцо Кристалла Реальности',emoji:'💎',rarity:'Абсолютное измерение',chance:0.5,reward:2200000,color:'#2dd4bf'},
+{name:'Яйцо Владыки Измерений',emoji:'🧿',rarity:'Абсолютное измерение',chance:0.4,reward:2800000,color:'#818cf8'},
+{name:'Яйцо Космического Самурая',emoji:'⚔️',rarity:'Абсолютное измерение',chance:0.35,reward:3200000,color:'#f43f5e'},
+{name:'Яйцо Звёздного Трона',emoji:'🪑',rarity:'Абсолютное измерение',chance:0.3,reward:3800000,color:'#facc15'},
+{name:'Яйцо Хроно-Бога',emoji:'⏳',rarity:'Божественное измерение',chance:0.25,reward:4500000,color:'#a3e635'},
+{name:'Яйцо Сердца Вселенной',emoji:'❤️\u200d🔥',rarity:'Божественное измерение',chance:0.2,reward:5200000,color:'#fb7185'},
+{name:'Яйцо Сверхгалактики',emoji:'🌌',rarity:'Божественное измерение',chance:0.18,reward:6000000,color:'#c084fc'},
+{name:'Яйцо Первого Создателя',emoji:'🛸',rarity:'Божественное измерение',chance:0.15,reward:6800000,color:'#67e8f9'},
+{name:'Яйцо Вечного Света',emoji:'✨',rarity:'Божественное измерение',chance:0.12,reward:7500000,color:'#fde047'},
+{name:'Яйцо Абсолютного Портала',emoji:'🌀',rarity:'Божественное измерение',chance:0.1,reward:8200000,color:'#f472b6'},
+{name:'Яйцо Омега Неда',emoji:'🗿',rarity:'Божественное измерение',chance:0.07,reward:9000000,color:'#fb923c'},
+{name:'Яйцо Финала Мультивселенной',emoji:'🌠',rarity:'Запредельное измерение',chance:0.03,reward:10000000,color:'#ffffff'},
+];
+const SKILL_DEFS=[
+{id:'coin',title:'💰 Золотая рука',desc:'+10% к монетам за уровень навыка',max:10,cost:1},
+{id:'xp',title:'⭐ Мудрость Неда',desc:'+10% к XP за уровень навыка',max:10,cost:1},
+{id:'rare',title:'🍀 Охотник за редкостями',desc:'Повышает шанс редких предметов',max:10,cost:1},
+{id:'discount',title:'🎟️ Мастер скидок',desc:'Снижает цену крутки ещё на 5 монет за уровень',max:10,cost:1}
+];
+const TITLE_DEFS=[
+{id:'rookie',name:'Новичок Неда',emoji:'🌱',check:()=>true},
+{id:'spinner',name:'Король круток',emoji:'🎰',check:()=>state.spins>=100},
+{id:'collector',name:'Коллекционер',emoji:'🏆',check:()=>Object.values(state.collection||{}).filter(n=>n>0).length>=10},
+{id:'museum',name:'Музей Неда',emoji:'🏛️',check:()=>Object.values(state.collection||{}).filter(n=>n>0).length>=100},
+{id:'reborn',name:'Перерожденец',emoji:'♻️',check:()=>state.rebirths>=1||state.superRebirths>=1},
+{id:'immortal',name:'Нед бессмертный',emoji:'💀',check:()=>state.rebirths>=10||state.superRebirths>=1},
+{id:'petmaster',name:'Повелитель питомцев',emoji:'🐉',check:()=>PETS.every(p=>(state.pets||{})[p.name]>0)},
+{id:'bosswinner',name:'Победитель боссов',emoji:'⚔️',check:()=>Object.keys(state.bossClaims||{}).length>0},
+{id:'dimension',name:'Межпространственный',emoji:'🌌',check:()=>state.rebirths>=25}
+];
+const PETS=[
+{name:"Крошка-дракон",emoji:"🐲",rarity:"Обычный",coin:0.05,xp:0.05},
+{name:"Космический кот",emoji:"🐈‍⬛",rarity:"Редкий",coin:0.10,xp:0.10},
+{name:"Неоновый волк",emoji:"🐺",rarity:"Эпический",coin:0.18,xp:0.15},
+{name:"Феникс Неда",emoji:"🔥",rarity:"Легендарный",coin:0.30,xp:0.25},
+{name:"Дракон бесконечности",emoji:"🐉",rarity:"Мифический",coin:0.50,xp:0.50},
+{name:"Глитч-единорог",emoji:"🦄",rarity:"Секретный",coin:1.00,xp:0.75},
+{name:"Абсолютный НЕДА",emoji:"🗿",rarity:"Божественный",coin:2.00,xp:2.00},
+{name:"Желейный слизень",emoji:"🟢",rarity:"Обычный",coin:0.06,xp:0.04},
+{name:"Пиксельная лиса",emoji:"🦊",rarity:"Обычный",coin:0.07,xp:0.06},
+{name:"Лунный кролик",emoji:"🐇",rarity:"Редкий",coin:0.12,xp:0.14},
+{name:"Молниеносный гепард",emoji:"🐆",rarity:"Редкий",coin:0.16,xp:0.12},
+{name:"Ледяной пингвин",emoji:"🐧",rarity:"Редкий",coin:0.13,xp:0.18},
+{name:"Теневой ворон",emoji:"🐦‍⬛",rarity:"Эпический",coin:0.22,xp:0.22},
+{name:"Кибер-тигр",emoji:"🐯",rarity:"Эпический",coin:0.28,xp:0.20},
+{name:"Золотой голем",emoji:"🪙",rarity:"Легендарный",coin:0.45,xp:0.30},
+{name:"Грозовой лев",emoji:"🦁",rarity:"Легендарный",coin:0.35,xp:0.45},
+{name:"Галактическая медуза",emoji:"🪼",rarity:"Мифический",coin:0.65,xp:0.60},
+{name:"Кристальный феникс",emoji:"💎",rarity:"Мифический",coin:0.75,xp:0.70},
+{name:"Призрачный дракон",emoji:"👻",rarity:"Секретный",coin:1.15,xp:1.00},
+{name:"Чёрная дыра",emoji:"🌑",rarity:"Секретный",coin:1.50,xp:1.25},
+{name:"Звёздный хранитель",emoji:"🌟",rarity:"Божественный",coin:2.50,xp:2.25},
+{name:"НЕДА.EXE",emoji:"👾",rarity:"Божественный",coin:3.00,xp:2.75}
+];
+const ACHIEVEMENTS=[
+{id:'firstSpin',title:'Первый запуск',desc:'Сделай первую крутку',coins:500,xp:100,check:()=>state.spins>=1},
+{id:'spin100',title:'Крутильщик',desc:'Сделай 100 круток',coins:5000,xp:1000,check:()=>state.spins>=100},
+{id:'spin1000',title:'Легенда рулетки',desc:'Сделай 1 000 круток',coins:50000,xp:10000,check:()=>state.spins>=1000},
+{id:'collection10',title:'Коллекционер',desc:'Найди 10 разных предметов',coins:10000,xp:2000,check:()=>Object.values(state.collection||{}).filter(n=>n>0).length>=10},
+{id:'collection100',title:'Музей Неда',desc:'Найди 100 разных предметов',coins:100000,xp:25000,check:()=>Object.values(state.collection||{}).filter(n=>n>0).length>=100},
+{id:'million',title:'Первый миллион',desc:'Накопи 1 000 000 монет',coins:25000,xp:5000,check:()=>state.coins>=1000000},
+{id:'rebirth1',title:'Начало новой жизни',desc:'Соверши первое перерождение',coins:10000,xp:2500,check:()=>state.rebirths>=1||state.superRebirths>=1},
+{id:'rebirth10',title:'Перерожденец',desc:'Соверши 10 обычных перерождений',coins:100000,xp:25000,check:()=>state.rebirths>=10||state.superRebirths>=1},
+{id:'pet1',title:'Друг зверей',desc:'Найди первого питомца',coins:5000,xp:1500,check:()=>Object.values(state.pets||{}).some(n=>n>0)},
+{id:'jackpot',title:'Джекпот!',desc:'Выиграй джекпот в рулетке',coins:50000,xp:10000,check:()=>!!state.jackpotWon},
+{id:'super1',title:'За гранью',desc:'Соверши сверхперерождение',coins:1000000,xp:100000,check:()=>state.superRebirths>=1}
+];
+const DEFAULT={coins:1000,xp:0,spins:0,rebirths:0,superRebirths:0,pets:{},achievementClaims:{},jackpotWon:false,xpBoostUntil:0,jackpotArmed:false,luck:0,bonus:0,discount:0,giftClaimed:false,businessNedaUnlocked:false,businessLevel:0,businessLastAt:Date.now(),businessBank:0,questClaims:{},questResetAt:Date.now(),dailySpins:0,dailyRare:0,dailyUpgrades:0,dailyBusinessCollect:0,dailyWins:0,passClaims:{},collection:{},history:[],fusedItems:{},skillPoints:0,skills:{coin:0,xp:0,rare:0,discount:0},skillLevelSeen:1,chests:0,bossClaims:{},worldCollection:{},activeTitle:'rookie',equippedPet:''};
+let state={...DEFAULT};
+const $=id=>document.getElementById(id);
+function cost(){return Math.max(10,250-(state.discount||0)*10-(state.skills?.discount||0)*5)}
+function rebirthMultiplier(){return Math.pow(1.5,state.rebirths||0)*Math.pow(10,state.superRebirths||0)}
+function activePet(){const chosen=PETS.find(p=>p.name===state.equippedPet&&(state.pets&&state.pets[p.name])>0);return chosen||PETS.filter(p=>(state.pets&&state.pets[p.name])>0).sort((a,b)=>(b.coin+b.xp)-(a.coin+a.xp))[0]||null}
+function isRareRarity(r){return ['Редкое','Эпическое','Легендарное','Мифическое','Сверхредкое','Секретное','Божественное','Запредельное','Ультра-секретное','Абсолютно невозможное','Бизнес-секретное','Секретное измерение','Запредельная тайна','Абсолютная тайна','Космическая тайна'].includes(r)}
+function isSecretPrize(p){return !!p && (String(p.rarity||'').toLowerCase().includes('секрет') || String(p.rarity||'').toLowerCase().includes('тайна'));}
+function pickPetDrop(){const weights=PETS.map(p=>({'Обычный':50,'Редкий':28,'Эпический':14,'Легендарный':6,'Мифический':2,'Секретный':0.6,'Божественный':0.15}[p.rarity]||1));let r=Math.random()*weights.reduce((a,b)=>a+b,0);for(let i=0;i<PETS.length;i++){r-=weights[i];if(r<=0)return PETS[i]}return PETS[0]}
+function petCoinMultiplier(){const p=activePet();return 1+(p?p.coin:0)}
+function petXpMultiplier(){const p=activePet();return 1+(p?p.xp:0)}
+function multiplier(){return (1+state.bonus*.5)*(1+(state.skills?.coin||0)*0.1)*rebirthMultiplier()*petCoinMultiplier()}
+function skillXpMultiplier(){return 1+(state.skills?.xp||0)*0.1}
+function syncSkillPoints(){const lvl=levelInfo().level;if(!Number.isFinite(state.skillLevelSeen)){state.skillLevelSeen=lvl;}else if(lvl>state.skillLevelSeen){state.skillPoints=(state.skillPoints||0)+(lvl-state.skillLevelSeen);state.skillLevelSeen=lvl;}else if(lvl<state.skillLevelSeen){state.skillLevelSeen=lvl;}}
+function worldUnlocked(){return (state.rebirths||0)>=25}
+function currentBossKey(level){return (state.superRebirths||0)+':'+(state.rebirths||0)+':'+level}
+function availableTitles(){return TITLE_DEFS.filter(t=>t.check())}
+function levelInfo(){let level=1,remaining=state.xp,need=100;while(remaining>=need){remaining-=need;level++;need=Math.round(100*Math.pow(level,1.35))}return {level,remaining,need}}
+function businessRate(){return state.businessNedaUnlocked?Math.round((100*(state.businessLevel||0)+250)*rebirthMultiplier()):0}
+function businessPending(){if(!state.businessNedaUnlocked)return 0;const elapsed=Math.max(0,Date.now()-(state.businessLastAt||Date.now()));return Math.floor(elapsed/3600000*businessRate())+(state.businessBank||0)}
+function pickDailyQuests(){const pool=QUEST_POOL.slice();for(let i=pool.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]];}return pool.slice(0,5).map(q=>q.id)}
+function resetDailyQuestsIfNeeded(){const now=Date.now();if(!state.questResetAt||now-state.questResetAt>=86400000){state.questResetAt=now;state.questClaims={};state.dailySpins=0;state.dailyRare=0;state.dailyUpgrades=0;state.dailyBusinessCollect=0;state.dailyWins=0;state.dailyQuestIds=pickDailyQuests();}else if(!Array.isArray(state.dailyQuestIds)||!state.dailyQuestIds.length){state.dailyQuestIds=pickDailyQuests();}}
+function dailyQuestTimeLeft(){return Math.max(0,86400000-(Date.now()-(state.questResetAt||Date.now())))}
+function formatTime(ms){const h=Math.floor(ms/3600000),m=Math.floor(ms%3600000/60000);return h+' ч '+m+' мин'}
+function saveLocal(){try{localStorage.setItem('nedaRouletteSaveV1',JSON.stringify(state))}catch(e){}}
+function loadLocal(){try{const raw=localStorage.getItem('nedaRouletteSaveV1');if(raw){const d=JSON.parse(raw);if(Number.isFinite(d.coins)&&Number.isFinite(d.xp)&&d.collection){state={...DEFAULT,...d,skills:{...DEFAULT.skills,...(d.skills||{})},fusedItems:{...(d.fusedItems||{})},bossClaims:{...(d.bossClaims||{})},worldCollection:{...(d.worldCollection||{})}};if(!Number.isFinite(d.skillLevelSeen))state.skillLevelSeen=levelInfo().level;}}}catch(e){}}
+function render(){
+  resetDailyQuestsIfNeeded();syncSkillPoints();
+  $('coins').textContent=state.coins.toLocaleString('ru-RU')+' 🪙';
+  const li=levelInfo();
+  $('level').textContent=li.level+' ⭐';
+  $('xpText').textContent=li.remaining.toLocaleString('ru-RU')+' / '+li.need.toLocaleString('ru-RU')+' XP';
+  $('xpBar').style.width=(li.remaining/li.need*100)+'%';
+  $('spinsText').textContent='Круток: '+state.spins;
+  $('giftBtn').disabled=!!state.giftClaimed;
+  $('giftBtn').textContent=state.giftClaimed?'✅ Бонус уже забран':'🎁 Забрать бонус +250 монет';
+  $('businessBtn').disabled=!!state.businessNedaUnlocked||state.coins<100000;
+  $('businessBtn').textContent=state.businessNedaUnlocked?'✅ Бизнес Неда открыт':'💼 Открыть Бизнес Неда — 100 000 🪙';
+  $('businessMessage').textContent=state.businessNedaUnlocked?'Бизнес Неда теперь может выпасть в рулетке!':'';
+  $('businessLvl').textContent=state.businessLevel||0;const bp=50000*((state.businessLevel||0)+1);$('businessPrice').textContent=bp.toLocaleString('ru-RU');$('businessUpgradeBtn').disabled=!state.businessNedaUnlocked||state.coins<bp;$('businessUpgradeBtn').textContent=state.businessNedaUnlocked?'⬆️ Улучшить бизнес':'🔒 Сначала открой бизнес';$('businessUpgradeMessage').textContent=state.businessNedaUnlocked?'Награда бизнеса: '+Math.round(100000*(1+(state.businessLevel||0)*.25)).toLocaleString('ru-RU')+' 🪙':'Сначала купи Бизнес Неда за 100 000 🪙';
+  $('businessIncomeText').textContent='Доход бизнеса: '+businessRate().toLocaleString('ru-RU')+' 🪙/час';$('businessPendingText').textContent='Накоплено: '+businessPending().toLocaleString('ru-RU')+' 🪙';$('collectBusinessBtn').disabled=!state.businessNedaUnlocked||businessPending()<1;$('collectBusinessBtn').textContent=state.businessNedaUnlocked?'💰 Забрать доход ('+businessPending().toLocaleString('ru-RU')+' 🪙)':'🔒 Сначала открой бизнес';
+  renderQuests();renderPass();
+  $('spinBtn').textContent='КРУТИТЬ — '+cost()+' 🪙';$('spinBtn').disabled=state.coins<cost();
+  $('luckLvl').textContent=state.luck;$('luckPrice').textContent=(250*(state.luck+1)).toLocaleString('ru-RU');$('luckBtn').disabled=state.coins<250*(state.luck+1);
+  $('bonusLvl').textContent=state.bonus;$('bonusPrice').textContent=(200*(state.bonus+1)).toLocaleString('ru-RU');$('bonusBtn').disabled=state.coins<200*(state.bonus+1);
+  $('discountLvl').textContent=state.discount;$('discountPrice').textContent=(300*(state.discount+1)).toLocaleString('ru-RU');$('discountBtn').disabled=state.coins<300*(state.discount+1)||cost()<=50;
+  const superCount=state.superRebirths||0,superNeed=10000000,superReady=(state.rebirths||0)>=10&&li.level>=50&&state.coins>=superNeed;$('superRebirthCount').textContent=superCount;$('superMult').textContent='×'+Math.pow(10,superCount);$('superRebirthBtn').disabled=!superReady;$('superRequirements').textContent='Обычные перерождения: '+(state.rebirths||0)+'/10 • Уровень: '+li.level+'/50 • Монеты: '+state.coins.toLocaleString('ru-RU')+' / '+superNeed.toLocaleString('ru-RU')+' 🪙';
+  const rebirthLevel=li.level,rebirthNeed=5*((state.rebirths||0)+1),rebirthCost=1000000,rebirthReady=rebirthLevel>=rebirthNeed&&state.coins>=rebirthCost;$('rebirthCount').textContent=state.rebirths||0;$('moneyMult').textContent='×'+rebirthMultiplier()+' деньги / ×'+rebirthMultiplier()+' XP';$('rebirthBtn').disabled=!rebirthReady;$('rebirthRequirements').textContent='Уровень: '+rebirthLevel+'/'+rebirthNeed+' • Монеты: '+state.coins.toLocaleString('ru-RU')+' / '+rebirthCost.toLocaleString('ru-RU')+' 🪙';
+  $('wheel').innerHTML=PRIZES.slice(0,16).map(p=>`<div class="egg" style="--egg-color:${p.color}"><div class="emoji">${p.emoji}</div><small>${p.rarity}</small></div>`).join('');
+  if(!$('collection').classList.contains('hidden')){
+    $('collectionCount').textContent=`Собрано видов: ${PRIZES.filter(p=>(state.collection[p.name]||0)>0).length} / ${PRIZES.length}`;
+    $('collectionList').innerHTML=PRIZES.map(p=>{const n=state.collection[p.name]||0;return `<div class="row"><div style="font-size:28px">${n?p.emoji:'❔'}</div><div class="info"><b style="color:${n?p.color:'#71717a'}">${n?p.name:'Не найдено'}</b><span class="muted">${p.rarity}</span></div><strong>×${n}</strong></div>`}).join('');
+  }
+  renderPets();renderAchievements();renderFusion();renderChests();renderSkills();renderBosses();renderEncyclopedia();renderWorld();renderTitles();
+  $('history').innerHTML=state.history.length?state.history.slice(0,5).map(h=>`<div class="row"><div style="font-size:24px">${h.emoji}</div><div class="info"><b style="color:${h.color}">${h.name}</b><span class="muted">${h.rarity}</span></div><strong style="color:#facc15">+${h.won.toLocaleString('ru-RU')} 🪙</strong></div>`).join(''):'Пока пусто — крути рулетку!';
+  saveLocal();
+}
+function spin(){
+ if(state.coins<cost())return;
+ const pool=PRIZES.filter(p=>!p.businessOnly||state.businessNedaUnlocked);
+ const rarityFactor={'Обычное':1,'Необычное':0.65,'Редкое':0.28,'Эпическое':0.10,'Легендарное':0.035,'Мифическое':0.008,'Сверхредкое':0.002,'Секретное':0.0005,'Божественное':0.0002,'Запредельное':0.00002,'Ультра-секретное':0.000005,'Абсолютно невозможное':0.0000005,'Бизнес-секретное':0.001,'Секретное измерение':0.00000005,'Запредельная тайна':0.000000005,'Абсолютная тайна':0.0000000005,'Космическая тайна':0.00000000005};
+ const weights=pool.map(p=>{const rareFactor=rarityFactor[p.rarity]??0.03;const luckBoost=(p.rarity==='Редкое'||p.rarity==='Эпическое'||p.rarity==='Легендарное')?((state.luck*0.002)+(state.skills?.rare||0)*0.002):0;return Math.max(0.000000001,p.chance*rareFactor+luckBoost)});
+ const total=weights.reduce((a,b)=>a+b,0);let r=Math.random()*total,idx=0;
+ for(let i=0;i<weights.length;i++){r-=weights[i];if(r<0){idx=i;break}}
+ const p=pool[idx],baseReward=(p.businessOnly?100000*(1+(state.businessLevel||0)*.25):p.reward)*0.5;let jackpot=!!state.jackpotArmed||Math.random()<0.02;if(state.jackpotArmed)state.jackpotArmed=false;const won=Math.round(baseReward*multiplier()*(jackpot?10:1));
+ // Чем дороже предмет, тем больше XP; питомец и перерождения тоже усиливают XP.
+ const baseXpGain=Math.max(10,Math.round(Math.sqrt(Math.max(0,baseReward)/1000)*10));const xpGain=Math.round(baseXpGain*rebirthMultiplier()*petXpMultiplier()*skillXpMultiplier()*(Date.now()<(state.xpBoostUntil||0)?2:1)*(jackpot?5:1));
+ state.coins=state.coins-cost()+won;state.xp+=xpGain;state.spins++;state.dailySpins=(state.dailySpins||0)+1;if(['Редкое','Эпическое','Легендарное','Мифическое','Сверхредкое','Секретное','Божественное','Запредельное','Ультра-секретное','Абсолютно невозможное','Бизнес-секретное'].includes(p.rarity))state.dailyRare=(state.dailyRare||0)+1;state.dailyWins=(state.dailyWins||0)+won;state.collection[p.name]=(state.collection[p.name]||0)+1;
+ let petDrop=null;if(Math.random()<0.05){petDrop=pickPetDrop();state.pets=state.pets||{};state.pets[petDrop.name]=(state.pets[petDrop.name]||0)+1;}if(jackpot)state.jackpotWon=true;
+ state.history.unshift({...p,won});state.history=state.history.slice(0,5);
+ $('win').innerHTML=`<div class="win ${isSecretPrize(p)?'rare-win':''}" style="--win-color:${p.color}">${isSecretPrize(p)?'<div class="rare-label">🌌 СЕКРЕТНАЯ НАХОДКА! 🌌</div>':''}<div class="muted">ТВОЙ ВЫИГРЫШ!</div><div class="emoji">${p.emoji}</div><h3>${p.name}</h3><div>${p.rarity}</div><div style="color:#facc15;font-weight:900;font-size:22px">+${won.toLocaleString('ru-RU')} 🪙</div><div style="color:#a3e635">+${xpGain.toLocaleString('ru-RU')} XP ⭐</div>${jackpot?'<h3 style="color:#facc15">🎰 ДЖЕКПОТ ×10!</h3>':''}${petDrop?'<p>🐾 Найден питомец: '+petDrop.emoji+' '+petDrop.name+'!</p>':''}</div>`;
+ render();
+}
+function renderPets(){const active=activePet();$('petBonuses').innerHTML=active?'<h3>Надет питомец: '+active.emoji+' '+active.name+'</h3><p>Бонус к монетам: +'+Math.round(active.coin*100)+'% • Бонус к XP: +'+Math.round(active.xp*100)+'%</p>':'<h3>Питомец пока не найден</h3><p>Шанс найти питомца после каждой крутки — 5%.</p>';$('petList').innerHTML=PETS.map(p=>{const n=(state.pets&&state.pets[p.name])||0,eq=!!n&&active&&active.name===p.name;return '<div class="row"><div style="font-size:28px">'+(n?p.emoji:'❔')+'</div><div class="info"><b>'+ (n?p.name:'Неизвестный питомец')+'</b><span class="muted">'+p.rarity+' • +'+Math.round(p.coin*100)+'% монет • +'+Math.round(p.xp*100)+'% XP</span></div><strong>×'+n+'</strong>'+(n?'<button class="pet-equip '+(eq?'equipped':'')+'" data-pet="'+p.name+'">'+(eq?'✅ Надет':'Надеть')+'</button>':'')+'</div>'}).join('');$('petList').querySelectorAll('[data-pet]').forEach(b=>b.addEventListener('click',()=>{const p=PETS.find(x=>x.name===b.dataset.pet);if(!p||(state.pets[p.name]||0)<1)return;state.equippedPet=p.name;render()}))}
+function renderFusion(){const sel=$('fusionItem');if(!sel||$('fusion').classList.contains('hidden'))return;if(!sel.dataset.loaded){sel.innerHTML=PRIZES.filter(p=>!p.businessOnly||state.businessNedaUnlocked).map(p=>`<option value="${PRIZES.indexOf(p)}">${p.emoji} ${p.name} — есть ×${state.collection[p.name]||0}</option>`).join('');sel.dataset.loaded='1';}else{Array.from(sel.options).forEach(o=>{const p=PRIZES[Number(o.value)];if(p)o.textContent=`${p.emoji} ${p.name} — есть ×${state.collection[p.name]||0}`;});}const p=PRIZES[Number(sel.value)]||PRIZES[0],n=(state.collection||{})[p.name]||0;$('fusionInfo').innerHTML=`<b>${p.emoji} ${p.name}</b><p>У тебя: ×${n}. Нужно 5 копий. После слияния появится «✨ ${p.name}».</p>`;$('fusionBtn').disabled=n<5;const fused=Object.entries(state.fusedItems||{}).filter(([,count])=>count>0);$('fusedList').innerHTML=fused.length?fused.map(([name,count])=>`<div class="row"><div class="info"><b>✨ ${name}</b><span class="muted">Усиленный предмет</span></div><strong>×${count}</strong></div>`).join(''):'<p class="muted">Пока нет усиленных предметов. Найди 5 одинаковых яиц!</p>';}
+function renderChests(){if(!$('chestCount'))return;$('chestCount').textContent=(state.chests||0)+' 🎁';$('buyChestBtn').disabled=state.coins<10000;$('openChestBtn').disabled=(state.chests||0)<1;}
+function renderSkills(){if(!$('skillList')||$('skills').classList.contains('hidden'))return;$('skillPoints').textContent=state.skillPoints||0;$('skillList').innerHTML=SKILL_DEFS.map(def=>{const level=(state.skills||{})[def.id]||0,can=(state.skillPoints||0)>=def.cost&&level<def.max;return `<div class="upgrade"><h3>${def.title} — ур. ${level}/${def.max}</h3><p>${def.desc}</p><button class="secondary" data-skill="${def.id}" ${can?'':'disabled'}>⬆️ Улучшить за ${def.cost} очко навыка</button></div>`}).join('');$('skillList').querySelectorAll('[data-skill]').forEach(b=>b.addEventListener('click',()=>{const id=b.dataset.skill,def=SKILL_DEFS.find(x=>x.id===id);if(!def||state.skillPoints<def.cost||(state.skills[id]||0)>=def.max)return;state.skillPoints-=def.cost;state.skills[id]=(state.skills[id]||0)+1;render()}));}
+function renderBosses(){if(!$('bossInfo')||$('bosses').classList.contains('hidden'))return;const lvl=levelInfo().level,maxMark=Math.floor(lvl/10)*10;let mark=0,key='',defeated=false;for(let m=10;m<=maxMark;m+=10){const k=currentBossKey(m);if(!state.bossClaims[k]){mark=m;key=k;break;}}if(!mark&&maxMark>=10){mark=maxMark;key=currentBossKey(mark);defeated=true;}$('bossInfo').innerHTML=maxMark<10?`<h3>🔒 Первый босс на 10 уровне</h3><p>Твой уровень: ${lvl}/10</p>`:`<h3>${defeated?'✅':'👹'} Босс ${mark} уровня</h3><p>${defeated?'Все доступные боссы побеждены в текущем цикле перерождения.':'Победи босса и получи монеты, XP и сундук!'}</p>`;$('bossBtn').disabled=maxMark<10||defeated;$('bossBtn').textContent=maxMark<10?'🔒 Нужен 10 уровень':defeated?'✅ Все боссы побеждены':'⚔️ Сразиться с боссом '+mark+' уровня';const claims=Object.keys(state.bossClaims||{}).length;$('bossHistory').textContent=claims?`Всего побед: ${claims}`:'Пока нет побед. Поднимись до 10 уровня!';}
+function renderEncyclopedia(){if(!$('encyclopediaList')||$('encyclopedia').classList.contains('hidden'))return;const all=[...PRIZES,...WORLD_PRIZES],search=($('encyclopediaSearch').value||'').trim().toLowerCase(),rarity=$('encyclopediaRarity').value;const rarities=[...new Set(all.map(p=>p.rarity))].sort();const raritySel=$('encyclopediaRarity');if(raritySel.options.length<=1){rarities.forEach(r=>{const o=document.createElement('option');o.value=r;o.textContent=r;raritySel.appendChild(o);});}const found=all.filter(p=>(!search||p.name.toLowerCase().includes(search))&&(!rarity||p.rarity===rarity));const owned=all.filter(p=>p.name.startsWith('Яйцо ')||p.name.includes('Бизнес')).filter(p=>(state.collection[p.name]||state.worldCollection[p.name]||0)>0).length;$('encyclopediaCount').textContent=`Предметов в энциклопедии: ${owned} найдено • ${all.length} всего. Показано ${Math.min(100,found.length)} из ${found.length}.`;$('encyclopediaList').innerHTML=found.slice(0,100).map(p=>{const n=(state.collection[p.name]||0)+(state.worldCollection[p.name]||0);return `<div class="row"><div style="font-size:26px">${n?p.emoji:'❔'}</div><div class="info"><b style="color:${n?p.color:'#71717a'}">${n?p.name:'Неизвестный предмет'}</b><span class="muted">${p.rarity} • награда ${p.reward.toLocaleString('ru-RU')} 🪙 • базовый шанс ${p.chance}%</span></div><strong>×${n}</strong></div>`}).join('');$('encyclopediaMore').textContent=found.length>100?'Показаны первые 100 результатов. Уточни поиск, чтобы найти остальные.':'';}
+function renderWorld(){if(!$('worldLock')||$('world').classList.contains('hidden'))return;const unlocked=worldUnlocked();$('worldLock').innerHTML=unlocked?`<h3>🌌 Межпространственный портал открыт!</h3><p>Стоимость крутки: 10 000 🪙. У тебя ${state.coins.toLocaleString('ru-RU')} 🪙.</p>`:`<h3>🔒 Портал закрыт</h3><p>Нужно 25 обычных перерождений. Сейчас: ${(state.rebirths||0)}/25.</p>`;$('worldSpinBtn').disabled=!unlocked||state.coins<10000;$('worldWheel').innerHTML=WORLD_PRIZES.map(p=>`<div class="egg" style="--egg-color:${p.color}"><div class="emoji">${p.emoji}</div><small>${p.rarity}</small></div>`).join('');$('worldCollectionList').innerHTML=WORLD_PRIZES.map(p=>{const n=(state.worldCollection||{})[p.name]||0;return `<div class="row"><div style="font-size:26px">${n?p.emoji:'❔'}</div><div class="info"><b style="color:${n?p.color:'#71717a'}">${n?p.name:'Неизвестный предмет'}</b><span class="muted">${p.rarity}</span></div><strong>×${n}</strong></div>`}).join('');}
+function renderTitles(){if(!$('titleList')||$('titles').classList.contains('hidden'))return;const available=availableTitles(),sel=$('activeTitle'),old=state.activeTitle||'rookie';sel.innerHTML=available.map(t=>`<option value="${t.id}">${t.emoji} ${t.name}</option>`).join('');if(available.some(t=>t.id===old))sel.value=old;else{state.activeTitle='rookie';sel.value='rookie';} const current=TITLE_DEFS.find(t=>t.id===state.activeTitle&&t.check())||TITLE_DEFS[0];$('currentTitleDisplay').textContent=current.emoji+' '+current.name;$('titleList').innerHTML=TITLE_DEFS.map(t=>{const unlocked=t.check(),active=state.activeTitle===t.id;return `<div class="row"><div style="font-size:24px">${unlocked?t.emoji:'🔒'}</div><div class="info"><b>${unlocked?t.name:'Скрытый титул'}</b><span class="muted">${unlocked?'Открыт':'Выполни особое условие, чтобы открыть'}</span></div><strong>${active?'НАДЕТ':' '}</strong></div>`}).join('');}
+function renderAchievements(){const el=$('achievementList');if(!el)return;el.innerHTML=ACHIEVEMENTS.map(a=>{const done=a.check(),claimed=!!(state.achievementClaims&&state.achievementClaims[a.id]);return '<div class="upgrade"><h3>'+(claimed?'✅':done?'🎉':'🔒')+' '+a.title+'</h3><p>'+a.desc+'</p><div class="muted">Награда: '+a.coins.toLocaleString('ru-RU')+' 🪙 и '+a.xp.toLocaleString('ru-RU')+' XP</div><button class="secondary" data-achievement="'+a.id+'" '+(!done||claimed?'disabled':'')+'>'+(claimed?'Забрано':done?'🎁 Забрать награду':'Ещё не выполнено')+'</button></div>'}).join('');el.querySelectorAll('[data-achievement]').forEach(b=>b.addEventListener('click',()=>{const a=ACHIEVEMENTS.find(x=>x.id===b.dataset.achievement);if(!a||a.check()===false||state.achievementClaims[a.id])return;state.achievementClaims[a.id]=true;state.coins+=a.coins;state.xp+=a.xp;render()}))}
+const QUEST_POOL=[
+{id:'spin10',title:'Разминка рулетки',desc:'Сделай 10 круток за день',goal:10,reward:2500,progress:()=>state.dailySpins||0},
+{id:'spin20',title:'Рулеточный марафон',desc:'Сделай 20 круток за день',goal:20,reward:5000,progress:()=>state.dailySpins||0},
+{id:'spin35',title:'Мастер прокрутов',desc:'Сделай 35 круток за день',goal:35,reward:8500,progress:()=>state.dailySpins||0},
+{id:'rare3',title:'Первая редкость',desc:'Выиграй 3 редких или более редких предмета',goal:3,reward:3000,progress:()=>state.dailyRare||0},
+{id:'rare8',title:'Охотник за редкостями',desc:'Выиграй 8 редких или более редких предметов',goal:8,reward:9000,progress:()=>state.dailyRare||0},
+{id:'upgrade2',title:'Начинающий инженер',desc:'Купи 2 улучшения за день',goal:2,reward:2500,progress:()=>state.dailyUpgrades||0},
+{id:'upgrade5',title:'Инженер Неда',desc:'Купи 5 улучшений за день',goal:5,reward:7500,progress:()=>state.dailyUpgrades||0},
+{id:'earn15000',title:'Монетный дождь',desc:'Получи 15 000 монет с выигрышей рулетки',goal:15000,reward:4000,progress:()=>state.dailyWins||0},
+{id:'earn50000',title:'Денежный вихрь',desc:'Получи 50 000 монет с выигрышей рулетки',goal:50000,reward:12000,progress:()=>state.dailyWins||0},
+{id:'businessCollect',title:'Деловой день',desc:'Забери доход бизнеса 2 раза',goal:2,reward:15000,progress:()=>state.dailyBusinessCollect||0},
+{id:'earn100000',title:'Золотой поток',desc:'Получи 100 000 монет с выигрышей рулетки',goal:100000,reward:20000,progress:()=>state.dailyWins||0}
+];
+const QUESTS=QUEST_POOL;
+function renderQuests(){const el=$('questList');if(!el)return;const activeQuests=(state.dailyQuestIds||[]).map(id=>QUEST_POOL.find(q=>q.id===id)).filter(Boolean);el.innerHTML='<div class="upgrade"><h3>⏳ До обновления: '+formatTime(dailyQuestTimeLeft())+'</h3><p>Каждые 24 часа выбираются 5 случайных заданий из большого списка!</p></div>'+activeQuests.map(q=>{const prog=Math.min(q.goal,q.progress()),done=prog>=q.goal,claimed=!!state.questClaims[q.id];return `<div class="upgrade"><h3>${claimed?'✅':done?'🎉':'📌'} ${q.title}</h3><p>${q.desc}</p><div class="progress"><span style="width:${Math.min(100,prog/q.goal*100)}%"></span></div><div class="muted">Прогресс: ${prog.toLocaleString('ru-RU')}/${q.goal.toLocaleString('ru-RU')} • Награда: ${q.reward.toLocaleString('ru-RU')} 🪙</div><button class="secondary" data-quest="${q.id}" ${(!done||claimed)?'disabled':''}>${claimed?'Награда забрана':done?'🎁 Забрать награду':'Выполняй задание'}</button></div>`}).join('');el.querySelectorAll('[data-quest]').forEach(b=>b.addEventListener('click',()=>{const q=QUESTS.find(x=>x.id===b.dataset.quest);if(!q||state.questClaims[q.id]||q.progress()<q.goal)return;state.questClaims[q.id]=true;state.coins+=q.reward;$('win').innerHTML='<div class="win"><div class="emoji">🎉</div><h3>Задание выполнено!</h3><p>+'+q.reward.toLocaleString('ru-RU')+' 🪙</p></div>';render()}));}
+const PASS_REWARDS=Array.from({length:30},(_,i)=>({xp:i===0?0:Math.round(250*Math.pow(i,1.42)),coins:i===0?500:Math.round(1000+650*i+180*i*i),label:'Уровень паса '+(i+1)}));
+function renderPass(){const el=$('passList');if(!el)return;const total=PASS_REWARDS[PASS_REWARDS.length-1].xp;const next=PASS_REWARDS.find((r,i)=>i>0&&state.xp<r.xp);$('passProgress').textContent='Всего XP: '+state.xp.toLocaleString('ru-RU')+' • '+(next?'До следующей награды: '+(next.xp-state.xp).toLocaleString('ru-RU')+' XP':'Пас полностью пройден!');$('passBar').style.width=(Math.min(100,state.xp/total*100))+'%';el.innerHTML=PASS_REWARDS.map((r,i)=>{const claimed=!!state.passClaims[i],unlocked=state.xp>=r.xp;return `<div class="row"><div style="font-size:24px">${claimed?'✅':'🎟️'}</div><div class="info"><b>${r.label}</b><span class="muted">Нужно ${r.xp.toLocaleString('ru-RU')} XP • ${r.coins.toLocaleString('ru-RU')} 🪙</span></div><button class="secondary" style="width:auto;margin:0;padding:8px" data-pass="${i}" ${(!unlocked||claimed)?'disabled':''}>${claimed?'Забрано':unlocked?'Забрать':'Закрыто'}</button></div>`}).join('');el.querySelectorAll('[data-pass]').forEach(b=>b.addEventListener('click',()=>{const i=Number(b.dataset.pass),r=PASS_REWARDS[i];if(!r||state.passClaims[i]||state.xp<r.xp)return;state.passClaims[i]=true;state.coins+=r.coins;$('win').innerHTML='<div class="win"><div class="emoji">🎟️</div><h3>Награда паса!</h3><p>+'+r.coins.toLocaleString('ru-RU')+' 🪙</p>';render()}));}
+$('fusionItem').addEventListener('change',renderFusion);
+$('fusionBtn').addEventListener('click',()=>{const p=PRIZES[Number($('fusionItem').value)];if(!p)return;const have=state.collection[p.name]||0;if(have<5)return;state.collection[p.name]=have-5;const fusedName=p.name+' ✨';state.fusedItems[fusedName]=(state.fusedItems[fusedName]||0)+1;const coins=Math.max(100,Math.round(p.reward*2));const xp=Math.max(25,Math.round(Math.sqrt(Math.max(0,p.reward)/1000)*30));state.coins+=coins;state.xp+=xp;$('fusionMessage').textContent=`Слияние успешно! Получен ${fusedName}, +${coins.toLocaleString('ru-RU')} монет и +${xp.toLocaleString('ru-RU')} XP.`;render();});
+$('buyChestBtn').addEventListener('click',()=>{if(state.coins<10000)return;state.coins-=10000;state.chests=(state.chests||0)+1;$('chestMessage').textContent='Куплен тайный сундук! Теперь можешь его открыть.';render();});
+$('openChestBtn').addEventListener('click',()=>{if((state.chests||0)<1)return;state.chests--;const roll=Math.random();let message='';if(roll<0.4){const n=5000+Math.floor(Math.random()*45001);state.coins+=n;message=`Внутри было ${n.toLocaleString('ru-RU')} монет!`;}else if(roll<0.7){const n=1000+Math.floor(Math.random()*19001);state.xp+=n;message=`Внутри было ${n.toLocaleString('ru-RU')} XP!`;}else if(roll<0.9){const pool=PRIZES.filter(p=>!p.businessOnly||state.businessNedaUnlocked);const p=pool[Math.floor(Math.random()*pool.length)];state.collection[p.name]=(state.collection[p.name]||0)+1;message=`Внутри был предмет ${p.emoji} ${p.name}!`;}else{const p=PETS[Math.floor(Math.random()*PETS.length)];state.pets[p.name]=(state.pets[p.name]||0)+1;message=`Внутри был питомец ${p.emoji} ${p.name}!`;}$('chestMessage').textContent='🎁 Сундук открыт! '+message;render();});
+$('bossBtn').addEventListener('click',()=>{const lvl=levelInfo().level,maxMark=Math.floor(lvl/10)*10;let mark=0,key='';for(let m=10;m<=maxMark;m+=10){const k=currentBossKey(m);if(!state.bossClaims[k]){mark=m;key=k;break;}}if(mark<10||!key)return;state.bossClaims[key]=true;const coins=mark*5000*Math.max(1,rebirthMultiplier()),xp=mark*1000*Math.max(1,rebirthMultiplier());state.coins+=coins;state.xp+=xp;state.chests=(state.chests||0)+1;$('bossMessage').textContent=`Победа над боссом ${mark} уровня! +${coins.toLocaleString('ru-RU')} монет, +${xp.toLocaleString('ru-RU')} XP и +1 сундук.`;render();});
+$('worldSpinBtn').addEventListener('click',()=>{if(!worldUnlocked()||state.coins<10000)return;state.coins-=10000;const total=WORLD_PRIZES.reduce((a,p)=>a+p.chance,0);let r=Math.random()*total,p=WORLD_PRIZES[0];for(const item of WORLD_PRIZES){r-=item.chance;if(r<=0){p=item;break;}}const won=Math.round(p.reward*rebirthMultiplier()*petCoinMultiplier());const xp=Math.round(Math.sqrt(p.reward/1000)*20*rebirthMultiplier()*petXpMultiplier()*skillXpMultiplier());state.coins+=won;state.xp+=xp;state.worldCollection[p.name]=(state.worldCollection[p.name]||0)+1;state.spins++;$('worldWin').innerHTML=`<div class="win ${isSecretPrize(p)?'rare-win':''}" style="--win-color:${p.color}">${isSecretPrize(p)?'<div class="rare-label">🌌 СЕКРЕТНАЯ НАХОДКА! 🌌</div>':''}<div class="emoji">${p.emoji}</div><h3>${p.name}</h3><div>${p.rarity}</div><div style="color:#facc15;font-weight:900">+${won.toLocaleString('ru-RU')} 🪙</div><div style="color:#a3e635">+${xp.toLocaleString('ru-RU')} XP ⭐</div></div>`;render();});
+$('encyclopediaSearch').addEventListener('input',renderEncyclopedia);$('encyclopediaRarity').addEventListener('change',renderEncyclopedia);
+$('saveTitleBtn').addEventListener('click',()=>{const t=availableTitles().find(x=>x.id===$('activeTitle').value);if(!t)return;state.activeTitle=t.id;$('titleMessage').textContent='Теперь ты: '+t.emoji+' '+t.name+'!';render();});
+$('spinBtn').addEventListener('click',spin);
+$('businessBtn').addEventListener('click',()=>{if(state.businessNedaUnlocked)return;if(state.coins<100000){$('businessMessage').textContent='Нужно ещё '+(100000-state.coins).toLocaleString('ru-RU')+' 🪙';return;}state.coins-=100000;state.businessNedaUnlocked=true;state.businessLastAt=Date.now();$('win').innerHTML='<div class="win" style="--win-color:#facc15"><div class="emoji">💼</div><h3>Бизнес Неда открыт!</h3><p>Теперь он может выпасть в рулетке.</p></div>';render()});
+$('businessUpgradeBtn').addEventListener('click',()=>{if(!state.businessNedaUnlocked)return;const c=50000*((state.businessLevel||0)+1);if(state.coins>=c){state.coins-=c;state.businessLevel=(state.businessLevel||0)+1;$('win').innerHTML='<div class="win"><div class="emoji">🏢</div><h3>Бизнес улучшен!</h3><p>Уровень бизнеса: '+state.businessLevel+'</p></div>';render()}});
+$('collectBusinessBtn').addEventListener('click',()=>{if(!state.businessNedaUnlocked)return;const earned=businessPending();if(earned<1)return;state.coins+=earned;state.businessBank=0;state.businessLastAt=Date.now();state.dailyBusinessCollect=(state.dailyBusinessCollect||0)+1;$('win').innerHTML='<div class="win"><div class="emoji">💰</div><h3>Доход получен!</h3><p>+'+earned.toLocaleString('ru-RU')+' монет</p></div>';render()});
+
+$('rebirthBtn').addEventListener('click',()=>{const li=levelInfo();const requiredLevel=5*((state.rebirths||0)+1);if(li.level<requiredLevel||state.coins<1000000)return;if(!confirm('Переродиться? Монеты, XP, улучшения и бизнес будут сброшены. Коллекция останется, а деньги и XP за каждое перерождение увеличатся в 1,5 раза!'))return;const next=(state.rebirths||0)+1;state={...state,coins:1000,xp:0,spins:0,rebirths:next,luck:0,bonus:0,discount:0,businessNedaUnlocked:false,businessLevel:0,businessLastAt:Date.now(),businessBank:0};$('win').innerHTML='<div class="win" style="--win-color:#c084fc"><div class="emoji">♻️</div><h3>Перерождение №'+next+'!</h3><p>Множитель денег и XP теперь ×'+Math.pow(1.5,next).toFixed(2)+'!</p></div>';render()});
+$('superRebirthBtn').addEventListener('click',()=>{const li=levelInfo();if((state.rebirths||0)<10||li.level<50||state.coins<10000000)return;if(!confirm('Сверхперерождение? Монеты, XP, обычные перерождения, улучшения и бизнес сбросятся. Коллекция и питомцы останутся. Сверхмножитель денег и XP станет ×10 сильнее.'))return;state={...state,coins:1000,xp:0,spins:0,rebirths:0,superRebirths:(state.superRebirths||0)+1,luck:0,bonus:0,discount:0,businessNedaUnlocked:false,businessLevel:0,businessLastAt:Date.now(),businessBank:0};$('win').innerHTML='<div class="win" style="--win-color:#c084fc"><div class="emoji">🌌</div><h3>СВЕРХПЕРЕРОЖДЕНИЕ!</h3><p>Сверхперерождений: '+state.superRebirths+' • Множитель ×'+rebirthMultiplier()+'</p></div>';render()});
+$('giftBtn').addEventListener('click',()=>{if(state.giftClaimed)return;state.giftClaimed=true;state.coins+=250;$('win').innerHTML='<div class="win"><div class="emoji">🎁</div><h3>Бонус +250 монет!</h3><p>Бонус можно забрать только один раз.</p></div>';render()});
+$('luckBtn').addEventListener('click',()=>{let c=250*(state.luck+1);if(state.coins>=c){state.coins-=c;state.luck++;state.xp+=5;state.dailyUpgrades=(state.dailyUpgrades||0)+1;render()}});
+$('bonusBtn').addEventListener('click',()=>{let c=200*(state.bonus+1);if(state.coins>=c){state.coins-=c;state.bonus++;state.xp+=5;state.dailyUpgrades=(state.dailyUpgrades||0)+1;render()}});
+$('discountBtn').addEventListener('click',()=>{let c=300*(state.discount+1);if(state.coins>=c&&cost()>50){state.coins-=c;state.discount++;state.xp+=5;state.dailyUpgrades=(state.dailyUpgrades||0)+1;render()}});
+document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x===b));document.querySelectorAll('.view').forEach(x=>x.classList.toggle('hidden',x.id!==b.dataset.tab));render();}));
+$('exportBtn').addEventListener('click',()=>{const code=btoa(unescape(encodeURIComponent(JSON.stringify({v:1,...state}))));$('saveCode').value=code;$('saveMessage').textContent='Код создан! Скопируй его и сохрани в заметках.';if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(code).catch(()=>{});});
+$('importBtn').addEventListener('click',()=>{try{const d=JSON.parse(decodeURIComponent(escape(atob($('loadCode').value.trim()))));if(d.v!==1||!Number.isFinite(d.coins)||!Number.isFinite(d.xp)||!Number.isFinite(d.spins)||!d.collection||typeof d.collection!=='object')throw Error();state={...DEFAULT,...d};delete state.v;$('win').innerHTML='';$('saveMessage').textContent='Сохранение загружено!';render()}catch(e){$('saveMessage').textContent='Не удалось загрузить. Проверь код сохранения.'}});
+$('resetBtn').addEventListener('click',()=>{if(confirm('Точно начать заново? Текущий прогресс будет удалён.')){state={...DEFAULT,collection:{},history:[]};$('win').innerHTML='';$('saveMessage').textContent='Новая игра началась!';render()}});
+function adminNumber(id,min=0){const n=Math.floor(Number($(id).value));return Number.isFinite(n)?Math.max(min,Math.min(n,1e12)):min}
+function xpNeededForLevel(target){let total=0,level=1,need=100;while(level<target&&level<100000){total+=need;level++;need=Math.round(100*Math.pow(level,1.35))}return total}
+$('adminItem').innerHTML=PRIZES.map((p,i)=>`<option value="${i}">${p.emoji} ${p.name} — ${p.rarity}</option>`).join('');
+$('adminPet').innerHTML=PETS.map((p,i)=>`<option value="${i}">${p.emoji} ${p.name} — ${p.rarity}</option>`).join('');
+$('godModeBtn').addEventListener('click',()=>{state.coins+=1000000000;state.xp+=1000000000;state.spins+=10000;$('adminMessage').textContent='👑 РЕЖИМ БОГА активирован: +1 000 000 000 монет, +1 000 000 000 XP и +10 000 круток!';render()});
+$('maxSkillsBtn').addEventListener('click',()=>{let spent=0;SKILL_DEFS.forEach(d=>{const old=(state.skills||{})[d.id]||0;if(old<d.max){spent+=d.max-old;state.skills[d.id]=d.max}});state.skillPoints=Math.max(0,(state.skillPoints||0)-spent);$('adminMessage').textContent='⚡ Все навыки прокачаны до максимума! Потрачено очков навыков: '+spent+'.';render()});
+$('unlockWorldBtn').addEventListener('click',()=>{state.rebirths=Math.max(25,state.rebirths||0);$('adminMessage').textContent='🌌 Межпространственный мир открыт! Установлено минимум 25 перерождений.';render()});
+$('secretBurstBtn').addEventListener('click',()=>{for(let i=0;i<10;i++){const p=SECRET_PRIZES[Math.floor(Math.random()*SECRET_PRIZES.length)];state.collection[p.name]=(state.collection[p.name]||0)+1;}$('adminMessage').textContent='💥 Секретный дождь! В коллекцию добавлено 10 случайных секретных яиц.';render()});
+$('givePetBtn').addEventListener('click',()=>{const pet=PETS[adminNumber('adminPet')],n=Math.max(1,Math.min(1000000,adminNumber('adminPetCount',1)));if(!pet)return;state.pets=state.pets||{};state.pets[pet.name]=(state.pets[pet.name]||0)+n;if(!state.equippedPet)state.equippedPet=pet.name;$('adminMessage').textContent='🐾 Выдан питомец '+pet.emoji+' '+pet.name+' ×'+n+'!';render()});
+$('giveAllPetsBtn').addEventListener('click',()=>{state.pets=state.pets||{};PETS.forEach(p=>state.pets[p.name]=(state.pets[p.name]||0)+1);if(!state.equippedPet)state.equippedPet=PETS[0].name;$('adminMessage').textContent='🐉 Все питомцы добавлены в коллекцию!';render()});
+$('giveCoinsBtn').addEventListener('click',()=>{const n=adminNumber('adminCoins');state.coins+=n;$('adminMessage').textContent='Выдано '+n.toLocaleString('ru-RU')+' монет!';render()});
+$('giveXpBtn').addEventListener('click',()=>{const n=adminNumber('adminXp');state.xp+=n;$('adminMessage').textContent='Выдано '+n.toLocaleString('ru-RU')+' XP!';render()});
+$('giveSpinsBtn').addEventListener('click',()=>{const n=adminNumber('adminSpins');state.spins+=n;$('adminMessage').textContent='Выдано '+n.toLocaleString('ru-RU')+' круток!';render()});
+$('giveLevelBtn').addEventListener('click',()=>{const level=Math.max(1,Math.min(100000,adminNumber('adminLevel',1)));state.xp=xpNeededForLevel(level);$('adminMessage').textContent='Установлен '+level+' уровень!';render()});
+$('giveRebirthsBtn').addEventListener('click',()=>{const n=Math.min(1000,adminNumber('adminRebirths'));state.rebirths=n;$('adminMessage').textContent='Установлено перерождений: '+n+'. Множитель денег и XP ×'+rebirthMultiplier()+'.';render()});
+$('adminBusinessBtn').addEventListener('click',()=>{state.businessNedaUnlocked=true;state.businessLevel=Math.max(state.businessLevel||0,10);state.businessLastAt=Date.now();$('adminMessage').textContent='Бизнес открыт, установлен 10 уровень бизнеса!';render()});
+$('giveItemBtn').addEventListener('click',()=>{const p=PRIZES[adminNumber('adminItem')];const n=Math.max(1,Math.min(1000000,adminNumber('adminItemCount',1)));if(!p)return;state.collection[p.name]=(state.collection[p.name]||0)+n;$('adminMessage').textContent='Выдан предмет «'+p.name+'» ×'+n+'!';render()});
+$('giveAllItemsBtn').addEventListener('click',()=>{if(!confirm('Выдать по одному экземпляру всех '+PRIZES.length+' предметов?'))return;PRIZES.forEach(p=>state.collection[p.name]=(state.collection[p.name]||0)+1);$('adminMessage').textContent='Выданы все предметы: '+PRIZES.length+' штук!';render()});
+$('goldenRainBtn').addEventListener('click',()=>{state.coins+=1000000;$('eventMessage').textContent='🌧️ Золотой дождь! +1 000 000 монет.';render()});
+$('doubleXpBtn').addEventListener('click',()=>{state.xpBoostUntil=Math.max(Date.now(),state.xpBoostUntil||0)+600000;$('eventMessage').textContent='⚡ Двойной XP активирован на 10 минут!';render()});
+$('freeSecretBtn').addEventListener('click',()=>{SECRET_PRIZES.forEach(p=>state.collection[p.name]=(state.collection[p.name]||0)+1);$('eventMessage').textContent='🌌 Получены все '+SECRET_PRIZES.length+' секретных предметов!';render()});
+$('jackpotBtn').addEventListener('click',()=>{state.jackpotArmed=true;$('eventMessage').textContent='🎰 Следующая крутка гарантированно будет джекпотом ×10!';render()});
+loadLocal();resetDailyQuestsIfNeeded();render();setInterval(()=>{resetDailyQuestsIfNeeded();if(!$('quests').classList.contains('hidden'))renderQuests();saveLocal();},60000);
+</script>
+</body>
+</html>
