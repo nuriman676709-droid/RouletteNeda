@@ -1,5 +1,6 @@
 - name: Check project files
     run: |
+      echo "Checking project files..."
       ls -la
       find . -maxdepth 3 -type f | head -100
 
