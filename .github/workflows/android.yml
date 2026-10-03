@@ -1,8 +1,3 @@
-
-name: Build Android APK
-on: workflow_dispatch: push: branches: - main - master
-permissions: contents: read
-jobs: build: name: Build Android APK runs-on: ubuntu-latest
 steps:
   - name: Checkout project
     uses: actions/checkout@v4
@@ -13,33 +8,51 @@ steps:
       distribution: temurin
       java-version: '17'
 
-  - name: Extract Android project
+  - name: Extract Android project if needed
     run: |
-      set -eux
-      unzip -q RouletteNedaAndroid.zip -d extracted
-      find extracted -name settings.gradle -print
-      find extracted -name build.gradle -print
+      set -eu
+      if [ -f "RouletteNedaAndroid.zip" ]; then
+        mkdir -p extracted
+        unzip -oq RouletteNedaAndroid.zip -d extracted
+      fi
 
   - name: Find project folder
     run: |
-      PROJECT_DIR="$(find extracted -name settings.gradle -printf '%h\n' | head -n 1)"
-      test -n "$PROJECT_DIR"
+      set -eu
+      PROJECT_DIR="$(find . -type f -name settings.gradle -not -path './.git/*' -not -path '*/.gradle/*' -print -quit | xargs -r dirname)"
+      if [ -z "$PROJECT_DIR" ]; then
+        PROJECT_DIR="$(find . -type f -name settings.gradle.kts -not -path './.git/*' -not -path '*/.gradle/*' -print -quit | xargs -r dirname)"
+      fi
+      if [ -z "$PROJECT_DIR" ]; then
+        echo "ERROR: settings.gradle or settings.gradle.kts not found."
+        echo "Check that the Android project or RouletteNedaAndroid.zip is in the repository."
+        find . -maxdepth 4 -type f | head -100
+        exit 1
+      fi
       echo "PROJECT_DIR=$PROJECT_DIR" >> "$GITHUB_ENV"
+      echo "Project folder: $PROJECT_DIR"
 
   - name: Set up Gradle
     uses: gradle/actions/setup-gradle@v4
     with:
       gradle-version: '8.9'
 
-  - name: Build APK
+  - name: Build debug APK
     run: |
+      set -eu
       cd "$PROJECT_DIR"
-      gradle --no-daemon assembleDebug
+      if [ -f "./gradlew" ]; then
+        chmod +x ./gradlew
+        ./gradlew --no-daemon assembleDebug
+      else
+        gradle --no-daemon assembleDebug
+      fi
 
   - name: Upload APK
     uses: actions/upload-artifact@v4
     with:
       name: RouletteNeda-APK
-      path: extracted/**/app/build/outputs/apk/debug/app-debug.apk
+      path: |
+        **/build/outputs/apk/debug/*.apk
       if-no-files-found: error
       retention-days: 14
